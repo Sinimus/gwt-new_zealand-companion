@@ -1,6 +1,23 @@
-import { Coins, FileBadge, Footprints, LayoutTemplate, RefreshCw } from 'lucide-react';
+import {
+  Anchor,
+  Coins,
+  FileBadge,
+  Footprints,
+  GraduationCap,
+  Hammer,
+  LayoutTemplate,
+  Mountain,
+  RefreshCw,
+  Scissors,
+  Sun,
+  Target,
+  TriangleAlert,
+  Users,
+  Waves,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useSearch } from './useSearch';
+import iconsData from '../../data/codex_icons.json';
 
 const iconMap = {
   i1: Footprints,
@@ -8,7 +25,30 @@ const iconMap = {
   i3: Coins,
   i4: RefreshCw,
   i5: LayoutTemplate,
+  w1: Users,
+  w2: Hammer,
+  w3: Anchor,
+  w4: Scissors,
+  h1: TriangleAlert,
+  h2: Waves,
+  h3: Mountain,
+  h4: Sun,
+  a1: Hammer,
+  a2: GraduationCap,
+  a3: Target,
 } as const;
+
+const icons = iconsData as Array<{
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+}>;
+
+const galleryGroups = icons.reduce<Record<string, typeof icons>>((acc, icon) => {
+  acc[icon.type] = acc[icon.type] ? [...acc[icon.type], icon] : [icon];
+  return acc;
+}, {});
 
 const quickLinks = [
   { label: 'Wellington', query: 'wellington' },
@@ -47,19 +87,59 @@ export default function CodexPage() {
         </div>
 
         {query.trim().length === 0 ? (
-          <section className="rounded-2xl border border-primary/20 bg-white/70 p-5">
-            <h2 className="text-lg font-semibold text-text">Quick Links</h2>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {quickLinks.map((link) => (
-                <button
-                  key={link.label}
-                  type="button"
-                  onClick={() => setQuery(link.query)}
-                  className="rounded-full border border-primary/30 bg-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-text/80 transition hover:border-primary hover:text-primary"
-                >
-                  {link.label}
-                </button>
-              ))}
+          <section className="space-y-6">
+            <div className="rounded-2xl border border-primary/20 bg-white/70 p-5">
+              <h2 className="text-lg font-semibold text-text">Quick Links</h2>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {quickLinks.map((link) => (
+                  <button
+                    key={link.label}
+                    type="button"
+                    onClick={() => setQuery(link.query)}
+                    className="rounded-full border border-primary/30 bg-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-text/80 transition hover:border-primary hover:text-primary"
+                  >
+                    {link.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-primary/20 bg-white/70 p-5">
+              <h2 className="text-lg font-semibold text-text">Visual Gallery</h2>
+              <div className="mt-6 space-y-6">
+                {Object.entries(galleryGroups).map(([group, groupIcons]) => (
+                  <div key={group} className="space-y-3">
+                    <p className="text-xs uppercase tracking-[0.35em] text-text/60">{group}</p>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                      {groupIcons.map((icon) => {
+                        const Icon = iconMap[icon.id as keyof typeof iconMap] ?? LayoutTemplate;
+                        const isHazard = icon.type.toLowerCase() === 'hazard';
+                        return (
+                          <div
+                            key={icon.id}
+                            className="flex items-center gap-4 rounded-2xl border border-primary/20 bg-white/80 p-4"
+                          >
+                            <div
+                              className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${
+                                isHazard
+                                  ? 'border-amber-300/40 bg-amber-100'
+                                  : 'border-primary/30 bg-primary/10'
+                              }`}
+                            >
+                              <Icon
+                                className={`h-6 w-6 ${isHazard ? 'text-amber-700' : 'text-primary'}`}
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold text-text">{icon.name}</p>
+                              <p className="text-xs text-text/60">{icon.type}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         ) : results.length === 0 ? (

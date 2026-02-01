@@ -28,5 +28,71 @@
     "name": "Sheep Card",
     "description": "Primary resource. distinct types are needed for Wellington delivery. Breeding value determines income.",
     "type": "Resource"
+  },
+  {
+    "id": "w1",
+    "name": "Shepherd",
+    "description": "Used to buy sheep from the market. Reduces cost by £1 per Shepherd.",
+    "type": "Worker"
+  },
+  {
+    "id": "w2",
+    "name": "Craftsman",
+    "description": "Used to construct private buildings. Cost is 2 Craftsmen per building level.",
+    "type": "Worker"
+  },
+  {
+    "id": "w3",
+    "name": "Sailor",
+    "description": "Used to move your ship. 1 Sailor = 1 Movement point.",
+    "type": "Worker"
+  },
+  {
+    "id": "w4",
+    "name": "Shearer",
+    "description": "Used during shearing (delivery). Increases wool value.",
+    "type": "Worker"
+  },
+  {
+    "id": "h1",
+    "name": "Hazard",
+    "description": "Floods, Rockfalls, Droughts. You must pay the cost shown to cross. If you cannot pay, you cannot move through.",
+    "type": "Hazard"
+  },
+  {
+    "id": "h2",
+    "name": "Flood",
+    "description": "Green hazard. Pay the cost shown to cross; otherwise you cannot pass.",
+    "type": "Hazard"
+  },
+  {
+    "id": "h3",
+    "name": "Rockfall",
+    "description": "Grey hazard. Pay the cost shown to cross; otherwise you cannot pass.",
+    "type": "Hazard"
+  },
+  {
+    "id": "h4",
+    "name": "Drought",
+    "description": "Yellow hazard. Pay the cost shown to cross; otherwise you cannot pass.",
+    "type": "Hazard"
+  },
+  {
+    "id": "a1",
+    "name": "Build Action",
+    "description": "Place a private building on an empty space. Pay 2 Craftsmen per level.",
+    "type": "Action"
+  },
+  {
+    "id": "a2",
+    "name": "Train Action",
+    "description": "Hire a worker by paying its cost. Some spaces offer bonuses.",
+    "type": "Action"
+  },
+  {
+    "id": "a3",
+    "name": "Objective Action",
+    "description": "Take or complete an objective card according to the space.",
+    "type": "Action"
   }
 ]
