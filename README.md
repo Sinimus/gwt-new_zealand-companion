@@ -10,6 +10,7 @@ An unofficial interactive companion app designed to streamline setup, scoring, a
 - 📚 **The Codex**: Full-text search engine for rules and a visual gallery for iconography.
 - 🛠️ **Smart Tools**: Wellington delivery checklist and Market refill assistants.
 - 🧮 **Delivery Calculator**: Quick sum for distinct sheep values + certificates.
+- 🧭 **Turn Guide**: Phase-by-phase reference for move, action, and draw.
 - 📱 **Installable PWA**: Works fully offline. Add to your home screen for an app-like experience.
 
 ## Tech Stack
@@ -22,6 +23,12 @@ An unofficial interactive companion app designed to streamline setup, scoring, a
 pnpm install
 pnpm dev
 pnpm build
+```
+
+## Docker
+```bash
+docker build -t gwt-nz-companion .
+docker run -p 8080:80 gwt-nz-companion
 ```
 
 ## Legal & Credits

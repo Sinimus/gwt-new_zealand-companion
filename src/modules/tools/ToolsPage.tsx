@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import DeliveryCalculator from './components/DeliveryCalculator';
 import MarketRefillGuide from './components/MarketRefillGuide';
+import TurnGuide from './components/TurnGuide';
 import WellingtonChecklist from './components/WellingtonChecklist';
 
-type ToolTab = 'wellington' | 'market' | 'calculator';
+type ToolTab = 'wellington' | 'market' | 'calculator' | 'turn';
 
 const tabs: { id: ToolTab; label: string }[] = [
+  { id: 'turn', label: 'Turn Guide' },
   { id: 'wellington', label: 'Wellington' },
   { id: 'market', label: 'Market Refill' },
   { id: 'calculator', label: 'Calculator' },
@@ -46,7 +48,9 @@ export default function ToolsPage() {
         </div>
 
         <section>
-          {activeTab === 'wellington' ? (
+          {activeTab === 'turn' ? (
+            <TurnGuide />
+          ) : activeTab === 'wellington' ? (
             <WellingtonChecklist />
           ) : activeTab === 'market' ? (
             <MarketRefillGuide />
