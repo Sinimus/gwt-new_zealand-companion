@@ -1,5 +1,6 @@
+import { Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { calculateTotal } from './logic';
+import { buildLeaderboard, calculateTotal, type PlayerScore } from './logic';
 import type { ScoreSheet } from '../../types';
 
 const defaultSheet: ScoreSheet = {
@@ -41,54 +42,142 @@ const tiles: FieldConfig[] = [
 ];
 
 export default function ScoringPage() {
-  const [sheet, setSheet] = useState<ScoreSheet>(defaultSheet);
-  const total = useMemo(() => calculateTotal(sheet), [sheet]);
+  const [playerCount, setPlayerCount] = useState(4);
+  const [activePlayer, setActivePlayer] = useState(1);
+  const [sheets, setSheets] = useState<Record<number, ScoreSheet>>({
+    1: defaultSheet,
+    2: defaultSheet,
+    3: defaultSheet,
+    4: defaultSheet,
+  });
+
+  const currentSheet = sheets[activePlayer];
+  const leaderboard = useMemo(
+    () => buildLeaderboard(sheets, playerCount),
+    [sheets, playerCount],
+  );
+  const total = useMemo(() => calculateTotal(currentSheet), [currentSheet]);
 
   const handleChange = (key: keyof ScoreSheet, value: string) => {
     const parsed = Number(value);
-    setSheet((prev) => ({
+    setSheets((prev) => ({
       ...prev,
-      [key]: Number.isNaN(parsed) ? 0 : parsed,
+      [activePlayer]: {
+        ...prev[activePlayer],
+        [key]: Number.isNaN(parsed) ? 0 : parsed,
+      },
     }));
   };
 
-  const reset = () => setSheet(defaultSheet);
+  const resetCurrent = () => {
+    setSheets((prev) => ({
+      ...prev,
+      [activePlayer]: defaultSheet,
+    }));
+  };
+
+  const clearAll = () => {
+    setSheets({
+      1: defaultSheet,
+      2: defaultSheet,
+      3: defaultSheet,
+      4: defaultSheet,
+    });
+  };
+
+  const handlePlayerCountChange = (count: number) => {
+    setPlayerCount(count);
+    if (activePlayer > count) {
+      setActivePlayer(count);
+    }
+  };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 pb-28 pt-16">
+    <main className="min-h-screen bg-canvas text-text">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 pb-48 pt-16">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Scoring Module</p>
+          <p className="text-xs uppercase tracking-[0.35em] text-text/60">Scoring Module</p>
           <h1 className="text-3xl font-semibold sm:text-4xl">End-Game Scoring Calculator</h1>
-          <p className="max-w-2xl text-sm text-slate-300">
+          <p className="max-w-2xl text-sm text-text/70">
             Enter each category score to calculate your final total instantly.
           </p>
         </header>
 
-        <section className="grid gap-4 lg:grid-cols-3">
-          <ScoreCard title="Board Assets" fields={boardAssets} sheet={sheet} onChange={handleChange} />
-          <ScoreCard title="Cards" fields={cards} sheet={sheet} onChange={handleChange} />
-          <ScoreCard title="Tiles" fields={tiles} sheet={sheet} onChange={handleChange} />
+        <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-white/80 p-4">
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3, 4].map((player) => (
+              <button
+                key={player}
+                type="button"
+                onClick={() => setActivePlayer(player)}
+                disabled={player > playerCount}
+                className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+                  player === activePlayer
+                    ? 'border-primary bg-primary/20 text-primary'
+                    : 'border-primary/30 bg-white/60 text-text/70 hover:border-primary'
+                } ${player > playerCount ? 'cursor-not-allowed opacity-40' : ''}`}
+              >
+                Player {player}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-text/60">
+            <span>Players</span>
+            <div className="flex gap-2">
+              {[2, 3, 4].map((count) => (
+                <button
+                  key={count}
+                  type="button"
+                  onClick={() => handlePlayerCountChange(count)}
+                  className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+                    playerCount === count
+                      ? 'border-primary bg-primary/20 text-primary'
+                      : 'border-primary/30 bg-white/60 text-text/70 hover:border-primary'
+                  }`}
+                >
+                  {count}
+                </button>
+              ))}
+            </div>
+          </div>
         </section>
 
-        <button
-          type="button"
-          onClick={reset}
-          className="w-full rounded-full border border-slate-700 bg-slate-900/70 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-200 transition hover:border-slate-500 hover:bg-slate-900 lg:w-auto"
-        >
-          Reset
-        </button>
+        <section className="grid gap-4 lg:grid-cols-3">
+          <ScoreCard
+            title="Board Assets"
+            fields={boardAssets}
+            sheet={currentSheet}
+            onChange={handleChange}
+          />
+          <ScoreCard title="Cards" fields={cards} sheet={currentSheet} onChange={handleChange} />
+          <ScoreCard title="Tiles" fields={tiles} sheet={currentSheet} onChange={handleChange} />
+        </section>
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={resetCurrent}
+            className="rounded-full border border-primary/30 bg-white/80 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-text/80 transition hover:border-primary hover:bg-white"
+          >
+            Reset Player
+          </button>
+          <button
+            type="button"
+            onClick={clearAll}
+            className="rounded-full border border-primary/40 bg-primary/10 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary transition hover:border-primary hover:bg-primary/20"
+          >
+            Clear All
+          </button>
+        </div>
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-800 bg-slate-950/95 px-6 py-4 backdrop-blur">
+      <footer className="fixed bottom-0 left-0 right-0 border-t border-primary/20 bg-canvas/95 px-6 py-4 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Total Score</p>
-            <p className="text-3xl font-semibold text-amber-200">{total} VP</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-text/60">Leaderboard</p>
+            <LeaderboardSummary entries={leaderboard} />
           </div>
-          <div className="text-right text-xs text-slate-400">
-            Coins are converted at 5:1.
-          </div>
+          <div className="text-right text-xs text-text/60">Coins are converted at 5:1.</div>
         </div>
       </footer>
     </main>
@@ -104,14 +193,14 @@ type ScoreCardProps = {
 
 function ScoreCard({ title, fields, sheet, onChange }: ScoreCardProps) {
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-      <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+    <section className="rounded-2xl border border-primary/20 bg-white/80 p-5">
+      <h2 className="text-lg font-semibold text-text">{title}</h2>
       <div className="mt-4 space-y-3">
         {fields.map((field) => (
           <label key={field.key} className="block space-y-2">
-            <span className="text-sm font-medium text-slate-200">{field.label}</span>
+            <span className="text-sm font-medium text-text">{field.label}</span>
             {field.helper ? (
-              <span className="block text-xs text-slate-500">{field.helper}</span>
+              <span className="block text-xs text-text/60">{field.helper}</span>
             ) : null}
             <input
               type="number"
@@ -119,11 +208,53 @@ function ScoreCard({ title, fields, sheet, onChange }: ScoreCardProps) {
               min={0}
               value={Number.isNaN(sheet[field.key]) ? 0 : sheet[field.key]}
               onChange={(event) => onChange(field.key, event.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-lg font-semibold text-slate-100 outline-none transition focus:border-amber-200"
+              className="w-full rounded-xl border border-primary/30 bg-white px-4 py-3 text-lg font-semibold text-text outline-none transition focus:border-primary"
             />
           </label>
         ))}
       </div>
     </section>
+  );
+}
+
+type LeaderboardSummaryProps = {
+  entries: PlayerScore[];
+};
+
+function LeaderboardSummary({ entries }: LeaderboardSummaryProps) {
+  if (entries.length === 0) {
+    return <p className="text-lg font-semibold text-primary">No scores yet</p>;
+  }
+
+  const topScore = entries[0].total;
+  const scoreCounts = entries.reduce<Record<number, number>>((acc, entry) => {
+    acc[entry.total] = (acc[entry.total] ?? 0) + 1;
+    return acc;
+  }, {});
+  const topCount = scoreCounts[topScore] ?? 1;
+
+  return (
+    <div className="flex flex-wrap items-center gap-3 text-sm text-text/80">
+      {entries.map((entry, index) => {
+        const isWinner = entry.total === topScore && topCount === 1;
+        const isTied = (scoreCounts[entry.total] ?? 0) > 1;
+        return (
+          <div
+            key={entry.player}
+            className={`flex items-center gap-2 rounded-full border px-3 py-1 ${
+              isWinner
+                ? 'border-primary bg-primary/20 text-primary'
+                : 'border-primary/20 bg-white/70 text-text/80'
+            }`}
+          >
+            {isWinner ? <Trophy className="h-4 w-4" /> : null}
+            <span className="font-semibold">
+              {index + 1}. P{entry.player} ({entry.total})
+            </span>
+            {isTied ? <span className="text-xs uppercase text-text/60">Tied</span> : null}
+          </div>
+        );
+      })}
+    </div>
   );
 }
