@@ -32,6 +32,6 @@ docker run -p 8080:80 gwt-nz-companion
 ```
 
 ## Legal & Credits
-- **Author**: Sinimus.
+- **Author**: Sinimus ().
 - **Disclaimer**: This is a fan-made project. It is not affiliated with, endorsed, or sponsored by Eggertspiele, Plan B Games, or Alexander Pfister. All game art and mechanics are property of their respective owners.
 - **License**: GPL-3.0.

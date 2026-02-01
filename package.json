@@ -1,7 +1,7 @@
 {
   "name": "gwt-new_zealand-companion",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,8 @@
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "format": "prettier -w ."
   },
+  "author": "Sinimus <>",
+  "license": "GPL-3.0",
   "dependencies": {
     "clsx": "^2.1.1",
     "fuse.js": "^7.1.0",
