@@ -8,7 +8,6 @@ An unofficial interactive companion app designed to streamline setup, scoring, a
 - 🧙‍♂️ **Interactive Setup Wizard**: Step-by-step guide with randomized buildings and player resource tracking.
 - 🏆 **Competitive Scoring**: Calculator for 1-4 players with automatic leaderboard and tie-breakers.
 - 📚 **The Codex**: Full-text search engine for rules and a visual gallery for iconography.
-- 🧭 **Player Aid**: Global quick reference for turn structure and key mechanics.
 - 🛠️ **Smart Tools**: Wellington delivery checklist and Market refill assistants.
 - 📱 **Installable PWA**: Works fully offline. Add to your home screen for an app-like experience.
 
