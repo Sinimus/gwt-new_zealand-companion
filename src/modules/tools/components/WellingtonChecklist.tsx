@@ -46,8 +46,8 @@ export default function WellingtonChecklist() {
   return (
     <section className="flex flex-col gap-6">
       <header className="space-y-2">
-        <h2 className="text-2xl font-semibold text-slate-100">Wellington Delivery</h2>
-        <p className="text-sm text-slate-300">
+        <h2 className="text-2xl font-semibold text-text">Wellington Delivery</h2>
+        <p className="text-sm text-text/70">
           Tick each step as you resolve the Wellington phase.
         </p>
       </header>
@@ -60,25 +60,25 @@ export default function WellingtonChecklist() {
               key={step.id}
               className={`flex cursor-pointer items-start gap-4 rounded-2xl border px-5 py-4 transition ${
                 step.highlight
-                  ? 'border-amber-300/60 bg-amber-200/10'
-                  : 'border-slate-800 bg-slate-900/70'
+                  ? 'border-l-4 border-primary/60 bg-primary/10 shadow-sm'
+                  : 'border-primary/20 bg-white/80'
               }`}
             >
               <input
                 type="checkbox"
                 checked={isChecked}
                 onChange={() => toggle(step.id)}
-                className="mt-1 h-5 w-5 accent-amber-200"
+                className="mt-1 h-5 w-5 accent-primary"
               />
               <div>
                 <p
                   className={`text-lg font-semibold ${
-                    step.highlight ? 'text-amber-100' : 'text-slate-100'
+                    step.highlight ? 'text-primary' : 'text-text'
                   }`}
                 >
                   {step.title}
                 </p>
-                <p className="mt-1 text-sm text-slate-300">{step.detail}</p>
+                <p className="mt-1 text-sm text-text/70">{step.detail}</p>
               </div>
             </label>
           );
@@ -88,7 +88,7 @@ export default function WellingtonChecklist() {
       <button
         type="button"
         onClick={() => setChecked(defaultState)}
-        className="w-full rounded-full border border-slate-700 bg-slate-900/70 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-200 transition hover:border-slate-500 hover:bg-slate-900"
+        className="w-full rounded-full border border-primary/30 bg-white/80 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-text/80 transition hover:border-primary hover:bg-white"
       >
         Reset Checklist
       </button>

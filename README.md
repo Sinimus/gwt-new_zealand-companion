@@ -23,7 +23,8 @@ pnpm dev
 
 ## Dev Log
 - No tests yet; add vitest for module logic when rules parsing begins.
-- Tailwind baseline only; theme tokens and components not defined.
+- Theme tokens added; audit contrast and iconography before shipping.
+- PWA manifest icons are placeholders; add real icons before release.
 
 ## Roadmap
 - Add module-specific routing layouts and shared navigation shell.
