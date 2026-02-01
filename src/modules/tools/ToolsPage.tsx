@@ -14,7 +14,7 @@ const tabs: { id: ToolTab; label: string }[] = [
 ];
 
 export default function ToolsPage() {
-  const [activeTab, setActiveTab] = useState<ToolTab>('wellington');
+  const [activeTab, setActiveTab] = useState<ToolTab>('turn');
 
   return (
     <main className="min-h-screen bg-canvas text-text">

@@ -20,7 +20,7 @@ export default function TurnGuide() {
             </div>
           </div>
           <p className="mt-4 text-sm text-text/80">
-            Move Herder up to X steps (based on board). Pay for Hazards. End movement on a Tile.
+            Move Herder up to step limit. Pay for Hazards/Hands. End on a Tile.
           </p>
         </div>
 
@@ -35,8 +35,7 @@ export default function TurnGuide() {
             </div>
           </div>
           <p className="mt-4 text-sm text-text/80">
-            If Neutral/Private Building: Do Local Action(s) OR Single Aux Action. If
-            Kansas/Wellington: Perform Delivery steps.
+            Neutral/Private: Local Action OR Single Aux. Kansas/Wellington: Delivery steps.
           </p>
         </div>
 
@@ -50,7 +49,7 @@ export default function TurnGuide() {
               <h3 className="text-lg font-semibold text-text">Draw</h3>
             </div>
           </div>
-          <p className="mt-4 text-sm text-text/80">Draw cards up to hand limit (default 4).</p>
+          <p className="mt-4 text-sm text-text/80">Draw back to hand limit (4+).</p>
         </div>
       </div>
     </section>

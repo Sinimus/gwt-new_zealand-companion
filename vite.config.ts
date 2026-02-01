@@ -11,7 +11,18 @@ export default defineConfig({
         name: 'GWT:NZ Companion',
         short_name: 'GWT:NZ',
         theme_color: '#f59e0b',
-        icons: [],
+        icons: [
+          {
+            src: '/icon.svg',
+            sizes: '192x192',
+            type: 'image/svg+xml',
+          },
+          {
+            src: '/icon.svg',
+            sizes: '512x512',
+            type: 'image/svg+xml',
+          },
+        ],
       },
     }),
   ],
