@@ -5,11 +5,13 @@ const steps = [
     id: 'income',
     title: 'Income & Certificates',
     detail: 'Receive income and apply any certificates as needed.',
+    highlight: false,
   },
   {
     id: 'delivery',
     title: 'Delivery',
     detail: 'Sum unique sheep values and place your disc.',
+    highlight: false,
   },
   {
     id: 'foresightA',
@@ -27,6 +29,7 @@ const steps = [
     id: 'cleanup',
     title: 'Cleanup',
     detail: 'Refill Foresight spaces if needed.',
+    highlight: false,
   },
 ] as const;
 
