@@ -23,3 +23,16 @@ export interface Building {
     b: BuildingSide;
   };
 }
+
+export interface ScoreSheet {
+  coins: number;
+  buildings: number;
+  citiesPorts: number;
+  unlockedDiscs: number;
+  hazards: number;
+  sheepCards: number;
+  objectiveCards: number;
+  birdCards: number;
+  bonusTiles: number;
+  harbourmasterTiles: number;
+}

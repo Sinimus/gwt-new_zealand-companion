@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/ui/buildingcard.tsx","./src/lib/data.ts","./src/lib/utils.ts","./src/modules/codex/codexpage.tsx","./src/modules/scoring/scoringpage.tsx","./src/modules/setup/setuppage.tsx","./src/modules/setup/logic.ts","./src/modules/tools/toolspage.tsx","./src/types/index.ts"],"version":"5.9.3"}

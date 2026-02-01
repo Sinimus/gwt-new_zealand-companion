@@ -1,0 +1,32 @@
+[
+  {
+    "id": "i1",
+    "name": "Step / Movement",
+    "description": "Move your herder along the path. You must follow arrows.",
+    "type": "Action"
+  },
+  {
+    "id": "i2",
+    "name": "Certificate",
+    "description": "Increases the value of your wool during delivery. Can be temporary (0 cost) or permanent.",
+    "type": "Resource"
+  },
+  {
+    "id": "i3",
+    "name": "Gold",
+    "description": "Used to buy cards/upgrades. Tracked on the player board.",
+    "type": "Resource"
+  },
+  {
+    "id": "i4",
+    "name": "Cycle / Draw-Discard",
+    "description": "Draw X cards from your deck, then discard X cards from your hand.",
+    "type": "Effect"
+  },
+  {
+    "id": "i5",
+    "name": "Sheep Card",
+    "description": "Primary resource. distinct types are needed for Wellington delivery. Breeding value determines income.",
+    "type": "Resource"
+  }
+]

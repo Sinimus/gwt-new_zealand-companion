@@ -1,0 +1,37 @@
+[
+  {
+    "id": "r1",
+    "title": "Wellington Delivery",
+    "category": "Phase B",
+    "content": "1. Income & Certificates\n2. Delivery (Check distinct sheep)\n3. Foresight (Pick 2 tokens)\n4. Bonus Action",
+    "tags": ["delivery", "wellington", "end"]
+  },
+  {
+    "id": "r2",
+    "title": "Hand Limit",
+    "category": "General",
+    "content": "Hand limit is 4 cards (immediate discard if exceeded). Increases to 5/6 with Storehouses on sea board.",
+    "tags": ["cards", "limit"]
+  },
+  {
+    "id": "r3",
+    "title": "Tax / Hazards",
+    "category": "Movement",
+    "content": "Passing a Hazard requires paying coins equal to the number shown. If unable to pay, you cannot cross.",
+    "tags": ["movement", "money", "hazard"]
+  },
+  {
+    "id": "r4",
+    "title": "Building Construction",
+    "category": "Action",
+    "content": "Pay 2 Craftsmen per building level (2/4/6/8). Place a private building tile on an empty building space.",
+    "tags": ["build", "craftsmen"]
+  },
+  {
+    "id": "r5",
+    "title": "Exchange Tokens",
+    "category": "Components",
+    "content": "Can be used anytime during your turn (except during card draw resolution) to Draw 2, Discard 2.",
+    "tags": ["token", "macaroon", "draw"]
+  }
+]
