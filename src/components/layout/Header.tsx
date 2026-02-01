@@ -14,7 +14,7 @@ const routeLabels: Record<string, string> = {
 export default function Header() {
   const location = useLocation();
   const moduleLabel = routeLabels[location.pathname] ?? 'Module';
-  const [isAidOpen, setIsAidOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 border-b border-primary/20 bg-canvas/90 backdrop-blur">
@@ -32,7 +32,7 @@ export default function Header() {
           <span className="text-xs uppercase tracking-[0.3em] text-text/50">{moduleLabel}</span>
           <button
             type="button"
-            onClick={() => setIsAidOpen(true)}
+            onClick={() => setIsHelpOpen(true)}
             className="rounded-full border border-primary/30 bg-white/70 p-2 text-text/70 transition hover:border-primary hover:text-text"
             aria-label="Open player aid"
           >
@@ -40,7 +40,7 @@ export default function Header() {
           </button>
         </div>
       </div>
-      <PlayerAidModal isOpen={isAidOpen} onClose={() => setIsAidOpen(false)} />
+      <PlayerAidModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
     </header>
   );
 }

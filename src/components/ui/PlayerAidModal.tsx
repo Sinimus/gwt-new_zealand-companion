@@ -60,35 +60,20 @@ export default function PlayerAidModal({ isOpen, onClose }: PlayerAidModalProps)
 
         <div className="mt-6 space-y-4 text-sm text-text/80">
           {activeTab === 'turn' ? (
-            <div className="space-y-3">
-              <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
-                <p className="text-sm font-semibold text-text">Phase A: Move</p>
-                <p className="mt-2">Move your herder along the path and stop on a building or hazard.</p>
-              </div>
-              <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
-                <p className="text-sm font-semibold text-text">Phase B: Action / Delivery</p>
-                <p className="mt-2">Resolve the location action or complete a delivery (including Wellington).</p>
-              </div>
-              <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
-                <p className="text-sm font-semibold text-text">Phase C: Draw</p>
-                <p className="mt-2">Draw cards up to your hand limit after resolving actions.</p>
-              </div>
+            <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
+              <p className="text-sm font-semibold text-text">Turn Structure</p>
+              <p className="mt-2">
+                Phase A: Move Herder (step limit). Phase B: Local Action (if neutral/private)
+                OR Single Aux Action. Phase C: Draw back to hand limit.
+              </p>
             </div>
           ) : (
-            <div className="space-y-3">
-              <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
-                <p className="text-sm font-semibold text-text">Shearing Math</p>
-                <p className="mt-2">
-                  Value = (Distinct Sheep Cards × Breed Value) + Certificates + Shearer Bonus.
-                </p>
-                <p className="mt-2 text-xs text-text/60">
-                  Requires a delivery location that matches or exceeds the value.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
-                <p className="text-sm font-semibold text-text">Limits</p>
-                <p className="mt-2">Certificates and Gold are capped by available track spaces.</p>
-              </div>
+            <div className="rounded-2xl border border-primary/20 bg-white/80 p-4">
+              <p className="text-sm font-semibold text-text">Key Mechanics</p>
+              <p className="mt-2">
+                Shearing: Value = (Distinct Sheep × Breed) + Certs + Shearer Bonus. / Gold:
+                Max 50. / Hand Limit: 4 (initially).
+              </p>
             </div>
           )}
         </div>

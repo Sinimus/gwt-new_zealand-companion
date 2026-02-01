@@ -35,22 +35,22 @@
     "tags": ["token", "macaroon", "draw"]
   },
   {
-    "id": "r6",
-    "title": "Shearing (Delivery)",
+    "id": "r9",
+    "title": "Shearing Math",
     "category": "Delivery",
-    "content": "Value = (Distinct Sheep Cards × Breed Value) + Certificates + Shearer Bonus. Condition: Needs a delivery location matching the value.",
+    "content": "Value = (Distinct Sheep × Breed) + Certs + Shearer Bonus.",
     "tags": ["shearing", "delivery", "sheep"]
   },
   {
-    "id": "r7",
-    "title": "Movement Rules",
+    "id": "r10",
+    "title": "Movement Constraints",
     "category": "Movement",
     "content": "Move herder up to X steps. You may stop on any building (Neutral, Private, Hazard). Pass hazards by paying cost.",
     "tags": ["movement", "hazard"]
   },
   {
-    "id": "r8",
-    "title": "End of Game",
+    "id": "r11",
+    "title": "End Game Trigger",
     "category": "General",
     "content": "Triggered when the Job Market token moves off the board.",
     "tags": ["end", "job market"]
