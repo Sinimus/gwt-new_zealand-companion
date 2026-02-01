@@ -4,23 +4,29 @@ const steps = [
   {
     id: 'income',
     title: 'Income & Certificates',
-    detail: 'Gain Income. Optionally decline for £ per certificate.',
+    detail: 'Receive income and apply any certificates as needed.',
   },
   {
     id: 'delivery',
     title: 'Delivery',
-    detail: 'Check distinct sheep, max value, then place your disc.',
+    detail: 'Sum unique sheep values and place your disc.',
   },
   {
-    id: 'foresight',
-    title: 'Foresight',
-    detail: 'MUST PICK 2 TOKENS before moving on.',
+    id: 'foresightA',
+    title: 'Foresight A',
+    detail: 'Place disc on the chosen Foresight A space.',
     highlight: true,
   },
   {
-    id: 'bonus',
-    title: 'Bonus',
-    detail: 'Perform the action covered by your disc.',
+    id: 'foresightB',
+    title: 'Foresight B',
+    detail: 'Perform the action associated with that space.',
+    highlight: true,
+  },
+  {
+    id: 'cleanup',
+    title: 'Cleanup',
+    detail: 'Refill Foresight spaces if needed.',
   },
 ] as const;
 
@@ -29,8 +35,9 @@ type StepState = Record<(typeof steps)[number]['id'], boolean>;
 const defaultState: StepState = {
   income: false,
   delivery: false,
-  foresight: false,
-  bonus: false,
+  foresightA: false,
+  foresightB: false,
+  cleanup: false,
 };
 
 export default function WellingtonChecklist() {

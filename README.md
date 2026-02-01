@@ -9,6 +9,7 @@ An unofficial interactive companion app designed to streamline setup, scoring, a
 - 🏆 **Competitive Scoring**: Calculator for 1-4 players with automatic leaderboard and tie-breakers.
 - 📚 **The Codex**: Full-text search engine for rules and a visual gallery for iconography.
 - 🛠️ **Smart Tools**: Wellington delivery checklist and Market refill assistants.
+- 🧮 **Delivery Calculator**: Quick sum for distinct sheep values + certificates.
 - 📱 **Installable PWA**: Works fully offline. Add to your home screen for an app-like experience.
 
 ## Tech Stack
