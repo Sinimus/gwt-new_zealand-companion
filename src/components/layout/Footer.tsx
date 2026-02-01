@@ -12,7 +12,7 @@ export default function Footer() {
           <span>v1.0.0</span>
           <span>GPL-3.0</span>
           <a
-            href="https://github.com/Sinimus/gmt-new_zealand-companion"
+            href="https://github.com/Sinimus/gwt-new_zealand-companion"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 text-text/70 transition hover:text-primary"
