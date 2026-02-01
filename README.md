@@ -1,32 +1,29 @@
-# GWT New Zealand Companion
+# Great Western Trail New Zealand: Companion App
 
-Web-centric PWA companion for Great Western Trail: New Zealand.
+![Version](https://img.shields.io/badge/v1.0.0-brightgreen) ![PWA Ready](https://img.shields.io/badge/PWA%20Ready-yes-blue) ![Offline First](https://img.shields.io/badge/Offline%20First-enabled-orange)
 
-## Stack
-- React + Vite + TypeScript (strict)
-- Tailwind CSS v3.4
-- React Router
-- shadcn/ui-style structure (components/ui + lib/utils)
+An unofficial interactive companion app designed to streamline setup, scoring, and rules reference for the board game Great Western Trail: New Zealand.
 
-## Getting Started
+## Features
+- 🧙‍♂️ **Interactive Setup Wizard**: Step-by-step guide with randomized buildings and player resource tracking.
+- 🏆 **Competitive Scoring**: Calculator for 1-4 players with automatic leaderboard and tie-breakers.
+- 📚 **The Codex**: Full-text search engine for rules and a visual gallery for iconography.
+- 🛠️ **Smart Tools**: Wellington delivery checklist and Market refill assistants.
+- 📱 **Installable PWA**: Works fully offline. Add to your home screen for an app-like experience.
+
+## Tech Stack
+- **Core**: React + TypeScript + Vite.
+- **UI**: Tailwind CSS (Pastoral Theme) + Lucide Icons.
+- **Logic**: Fuse.js (Search), VitePWA (Offline).
+
+## Development
 ```bash
 pnpm install
 pnpm dev
+pnpm build
 ```
 
-## Structure
-- `src/modules/setup` — setup flow and checklists
-- `src/modules/codex` — rules and references
-- `src/modules/tools` — utility widgets
-- `src/modules/scoring` — scoring tools
-- `src/data/json` — static JSON fixtures
-
-## Dev Log
-- No tests yet; add vitest for module logic when rules parsing begins.
-- Theme tokens added; audit contrast and iconography before shipping.
-- PWA manifest icons are placeholders; add real icons before release.
-
-## Roadmap
-- Add module-specific routing layouts and shared navigation shell.
-- Introduce data fixtures for setup presets and scoring templates.
-- Add vitest coverage for scoring calculations.
+## Legal & Credits
+- **Author**: Sinimus.
+- **Disclaimer**: This is a fan-made project. It is not affiliated with, endorsed, or sponsored by Eggertspiele, Plan B Games, or Alexander Pfister. All game art and mechanics are property of their respective owners.
+- **License**: GPL-3.0.
