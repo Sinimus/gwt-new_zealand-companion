@@ -1,0 +1,183 @@
+[
+  {
+    "id": "neutral_1",
+    "name": "Local Trade / Pathfinder",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_1_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Discard exactly 2 sheep cards of the same type -> Gain £2." },
+          { "type": "local", "description": "Hire 1 worker (pay cost)." },
+          { "type": "local", "description": "Hire 1 worker (pay cost + £3)." }
+        ]
+      },
+      "b": {
+        "id": "neutral_1_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "EITHER advance disc 2 spaces on pathfinder track OR gain 1 objective card." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_2",
+    "name": "Ship Movement",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_2_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Move your ship equal to your Sailors. You may upgrade a harbour if you end movement there." }
+        ]
+      },
+      "b": {
+        "id": "neutral_2_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Move your gold marker 1 space forward." },
+          { "type": "auxiliary", "description": "Perform one single or one double auxiliary action." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_3",
+    "name": "Bonus Tiles / Wool Delivery",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_3_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Invest in a Bonus Tile (pay cost)." },
+          { "type": "auxiliary", "description": "Perform one single or one double auxiliary action." }
+        ]
+      },
+      "b": {
+        "id": "neutral_3_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Deliver Wool: Discard any number of distinct sheep cards. Gain £ equal to sum of breeding values + certificate marker." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_4",
+    "name": "Building Construction",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_4_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Build a private building (pay 2 Craftsmen per building level)." },
+          { "type": "auxiliary", "description": "Perform one single auxiliary action." }
+        ]
+      },
+      "b": {
+        "id": "neutral_4_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Build a private building (pay 2 Craftsmen per building level)." },
+          { "type": "auxiliary", "description": "Perform one single auxiliary action." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_5",
+    "name": "Job Market",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_5_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Move your gold marker 1 space forward." },
+          { "type": "local", "description": "Remove a worker/hazard from Job Market for £7 (minus £1 per Craftsman). Place in lower-left section." }
+        ]
+      },
+      "b": {
+        "id": "neutral_5_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Discard 1 Objective card -> Gain £4." },
+          { "type": "local", "description": "Remove a worker/hazard from Job Market for £7 (minus £1 per Craftsman). Place in lower-left section." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_6",
+    "name": "Sheep Market",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_6_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Buy Sheep from Market (Cost: per sheep value - Shepherds discount). Refill market immediately." }
+        ]
+      },
+      "b": {
+        "id": "neutral_6_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Buy Sheep from Market (Cost: per sheep value - Shepherds discount). Refill market immediately." },
+          { "type": "auxiliary", "description": "Perform one single auxiliary action." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_7",
+    "name": "Certificate / Objective",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_7_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Move certificate marker 1 space forward (temp or perm)." },
+          { "type": "local", "description": "Move certificate marker 1 space forward (temp or perm). Pay £2." }
+        ]
+      },
+      "b": {
+        "id": "neutral_7_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Move certificate marker 1 space forward (temp or perm)." },
+          { "type": "local", "description": "Discard 1 Objective card -> Gain 1 Gold." }
+        ]
+      }
+    }
+  },
+  {
+    "id": "neutral_8",
+    "name": "Movement / Cycle",
+    "type": "neutral",
+    "sides": {
+      "a": {
+        "id": "neutral_8_a",
+        "side": "a",
+        "actions": [
+          { "type": "local", "description": "Step forward up to 4 spaces (standard movement rules)." },
+          { "type": "auxiliary", "description": "Perform one single auxiliary action." }
+        ]
+      },
+      "b": {
+        "id": "neutral_8_b",
+        "side": "b",
+        "actions": [
+          { "type": "local", "description": "Draw 1 card, then Discard 1 card." },
+          { "type": "local", "description": "Step forward up to 4 spaces." }
+        ]
+      }
+    }
+  }
+]
