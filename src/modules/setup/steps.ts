@@ -25,14 +25,14 @@ export const setupSteps: SetupStep[] = [
     id: 'tokens',
     title: 'Token Setup',
     content:
-      'Bag A (Workers): Fill Job Market columns based on player count. Place Hazards in ascending order. Bag B (Bonus): Fill top 2 rows of Bonus Market.',
+      'Bag A (Workers): 2 Players: Fill columns 1-2. 3 Players: Fill columns 1-3. 4 Players: Fill all columns. Place Hazards in ascending order. Bag B (Bonus): Fill top 2 rows of Bonus Market.',
     type: 'text',
   },
   {
     id: 'players',
     title: 'Player Setup',
     content:
-      'Each player takes: Board, Herder, Hat, 15 Discs, Ship. Shuffle Starting Deck (4 types). Place Ship on Start.',
+      'Each player takes: Board, Herder, Hat, 15 Discs, Ship. Deck: 4x Romney, 3x Lincoln, 3x Perendale, 4x Starting Cards. Place Ship on Start.',
     type: 'text',
   },
   {

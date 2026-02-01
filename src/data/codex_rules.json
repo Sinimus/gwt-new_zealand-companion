@@ -33,5 +33,26 @@
     "category": "Components",
     "content": "Can be used anytime during your turn (except during card draw resolution) to Draw 2, Discard 2.",
     "tags": ["token", "macaroon", "draw"]
+  },
+  {
+    "id": "r6",
+    "title": "Shearing (Delivery)",
+    "category": "Delivery",
+    "content": "Value = (Distinct Sheep Cards × Breed Value) + Certificates + Shearer Bonus. Condition: Needs a delivery location matching the value.",
+    "tags": ["shearing", "delivery", "sheep"]
+  },
+  {
+    "id": "r7",
+    "title": "Movement Rules",
+    "category": "Movement",
+    "content": "Move herder up to X steps. You may stop on any building (Neutral, Private, Hazard). Pass hazards by paying cost.",
+    "tags": ["movement", "hazard"]
+  },
+  {
+    "id": "r8",
+    "title": "End of Game",
+    "category": "General",
+    "content": "Triggered when the Job Market token moves off the board.",
+    "tags": ["end", "job market"]
   }
 ]

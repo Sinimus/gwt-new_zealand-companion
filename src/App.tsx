@@ -38,7 +38,7 @@ function Dashboard() {
     <main className="bg-canvas text-text">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-16">
         <header className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-text/60">GWT Companion</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-text/60">GWT:NZ Companion</p>
           <h1 className="text-4xl font-semibold text-text sm:text-5xl">
             Great Western Trail: New Zealand
           </h1>
