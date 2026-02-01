@@ -4,3 +4,7 @@ node_modules
 .DS_Store
 AGENTS.md
 agents.md
+*.tsbuildinfo
+vite.config.js
+tailwind.config.js
+tailwind.config.d.ts
