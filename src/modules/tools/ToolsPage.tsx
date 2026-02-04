@@ -3,14 +3,16 @@ import DeliveryCalculator from './components/DeliveryCalculator';
 import MarketRefillGuide from './components/MarketRefillGuide';
 import TurnGuide from './components/TurnGuide';
 import WellingtonChecklist from './components/WellingtonChecklist';
+import SeaRoutesBoard from './components/SeaRoutesBoard';
 
-type ToolTab = 'wellington' | 'market' | 'calculator' | 'turn';
+type ToolTab = 'wellington' | 'market' | 'calculator' | 'turn' | 'sea';
 
 const tabs: { id: ToolTab; label: string }[] = [
   { id: 'turn', label: 'Turn Guide' },
   { id: 'wellington', label: 'Wellington' },
   { id: 'market', label: 'Market Refill' },
   { id: 'calculator', label: 'Calculator' },
+  { id: 'sea', label: 'Sea Routes' },
 ];
 
 export default function ToolsPage() {
@@ -54,6 +56,8 @@ export default function ToolsPage() {
             <WellingtonChecklist />
           ) : activeTab === 'market' ? (
             <MarketRefillGuide />
+          ) : activeTab === 'sea' ? (
+            <SeaRoutesBoard />
           ) : (
             <DeliveryCalculator />
           )}

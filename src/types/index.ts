@@ -37,3 +37,16 @@ export interface ScoreSheet {
   harbourmasterTiles: number;
   remainingMoney: number;
 }
+
+// Sea Routes Board Types
+export interface Port {
+  id: string;
+  name: string;
+  cost: number; // Ship movement points to reach this port
+  bonus: string; // Description of bonus for placing a disc
+}
+
+export interface SeaBoardState {
+  playerShips: Record<number, string>; // player number -> port ID
+  claimedPorts: Record<string, number[]>; // port ID -> array of player numbers who placed discs
+}
