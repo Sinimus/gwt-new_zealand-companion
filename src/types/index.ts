@@ -59,12 +59,9 @@ export type PlayerScore = {
 
 export type PlayerCount = 2 | 3 | 4;
 
-export interface ActiveBuilding {
-  id: string;
-  name: string;
-  type: BuildingType;
+export type ActiveBuilding = Building & {
   activeSide: BuildingSide;
-}
+};
 
 // Game History & Archive
 export interface ArchivedGame {

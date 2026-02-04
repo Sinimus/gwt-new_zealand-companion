@@ -1,11 +1,6 @@
-import type { Building, BuildingSide } from '../../types';
+import type { Building, BuildingSide, ActiveBuilding, PlayerCount } from '../../types';
+export type { ActiveBuilding, PlayerCount };
 import { buildings } from '../../lib/data';
-
-export type ActiveBuilding = Building & {
-  activeSide: BuildingSide;
-};
-
-export type PlayerCount = 2 | 3 | 4;
 
 export type StartingResource = {
   player: number;
