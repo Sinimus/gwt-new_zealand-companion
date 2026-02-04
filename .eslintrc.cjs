@@ -10,10 +10,9 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react-refresh/recommended',
     'prettier',
   ],
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'react-refresh'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint'],
   settings: {
     react: {
       version: 'detect',
@@ -21,5 +20,6 @@ module.exports = {
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
   },
 };

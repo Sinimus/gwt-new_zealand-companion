@@ -20,6 +20,7 @@ export function calculateTotal(sheet: ScoreSheet): number {
 export type PlayerScore = {
   player: number;
   total: number;
+  remainingMoney: number;
 };
 
 export function buildLeaderboard(
@@ -30,6 +31,14 @@ export function buildLeaderboard(
     .map((player) => ({
       player,
       total: calculateTotal(sheets[player]),
+      remainingMoney: sheets[player].remainingMoney,
     }))
-    .sort((a, b) => b.total - a.total);
+    .sort((a, b) => {
+      // Primary sort: total VP (descending)
+      if (b.total !== a.total) {
+        return b.total - a.total;
+      }
+      // Secondary sort: remaining money (descending) - tie-breaker
+      return b.remainingMoney - a.remainingMoney;
+    });
 }

@@ -1,10 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetupWizard from './components/SetupWizard';
 import { randomizeBuildings, type ActiveBuilding, type PlayerCount } from './logic';
 
+// localStorage keys - namespaced to avoid conflicts
+const STORAGE_KEYS = {
+  SETUP: 'gwt-nz-setup-buildings',
+  PLAYER_COUNT: 'gwt-nz-setup-playerCount',
+};
+
 export default function SetupPage() {
-  const [setup, setSetup] = useState<ActiveBuilding[]>(() => randomizeBuildings());
-  const [playerCount, setPlayerCount] = useState<PlayerCount>(4);
+  const [setup, setSetup] = useState<ActiveBuilding[]>(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.SETUP);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        // Validate that we have an array of 8 buildings
+        if (Array.isArray(parsed) && parsed.length === 8) {
+          return parsed;
+        }
+      } catch {
+        // If parsing fails, fall through to default
+      }
+    }
+    return randomizeBuildings();
+  });
+  
+  const [playerCount, setPlayerCount] = useState<PlayerCount>(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.PLAYER_COUNT);
+    const count = stored ? Number(stored) : 4;
+    return (count === 2 || count === 3 || count === 4) ? count : 4;
+  });
+
+  // Persist state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.SETUP, JSON.stringify(setup));
+  }, [setup]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.PLAYER_COUNT, String(playerCount));
+  }, [playerCount]);
 
   return (
     <main className="min-h-screen bg-canvas text-text">

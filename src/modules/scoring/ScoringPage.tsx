@@ -1,6 +1,6 @@
 import { Trophy } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { buildLeaderboard, calculateTotal, type PlayerScore } from './logic';
+import { useMemo, useState, useEffect } from 'react';
+import { buildLeaderboard, type PlayerScore } from './logic';
 import type { ScoreSheet } from '../../types';
 
 const defaultSheet: ScoreSheet = {
@@ -14,6 +14,7 @@ const defaultSheet: ScoreSheet = {
   birdCards: 0,
   bonusTiles: 0,
   harbourmasterTiles: 0,
+  remainingMoney: 0,
 };
 
 type FieldConfig = {
@@ -41,22 +42,71 @@ const tiles: FieldConfig[] = [
   { key: 'harbourmasterTiles', label: 'Harbourmaster Tiles VP' },
 ];
 
+const tieBreakers: FieldConfig[] = [
+  { key: 'remainingMoney', label: 'Remaining Money', helper: 'Tie-breaker: £' },
+];
+
+// localStorage keys - use namespaced keys to avoid conflicts
+const STORAGE_KEYS = {
+  SHEETS: 'gwt-nz-scoring-sheets',
+  PLAYER_COUNT: 'gwt-nz-scoring-playerCount',
+  ACTIVE_PLAYER: 'gwt-nz-scoring-activePlayer',
+};
+
 export default function ScoringPage() {
-  const [playerCount, setPlayerCount] = useState(4);
-  const [activePlayer, setActivePlayer] = useState(1);
-  const [sheets, setSheets] = useState<Record<number, ScoreSheet>>({
-    1: defaultSheet,
-    2: defaultSheet,
-    3: defaultSheet,
-    4: defaultSheet,
+  // Initialize from localStorage or defaults
+  const [playerCount, setPlayerCount] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.PLAYER_COUNT);
+    return stored ? Number(stored) : 4;
   });
+  
+  const [activePlayer, setActivePlayer] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_PLAYER);
+    return stored ? Number(stored) : 1;
+  });
+  
+  const [sheets, setSheets] = useState<Record<number, ScoreSheet>>(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.SHEETS);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        // Validate structure - ensure all player slots exist
+        const validated: Record<number, ScoreSheet> = {};
+        for (let i = 1; i <= 4; i++) {
+          // Merge with defaultSheet to handle migration from old format
+          validated[i] = { ...defaultSheet, ...parsed[i] };
+        }
+        return validated;
+      } catch {
+        // If parsing fails, return defaults
+      }
+    }
+    return {
+      1: { ...defaultSheet },
+      2: { ...defaultSheet },
+      3: { ...defaultSheet },
+      4: { ...defaultSheet },
+    };
+  });
+
+  // Persist state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.SHEETS, JSON.stringify(sheets));
+  }, [sheets]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.PLAYER_COUNT, String(playerCount));
+  }, [playerCount]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.ACTIVE_PLAYER, String(activePlayer));
+  }, [activePlayer]);
 
   const currentSheet = sheets[activePlayer];
   const leaderboard = useMemo(
     () => buildLeaderboard(sheets, playerCount),
     [sheets, playerCount],
   );
-  const total = useMemo(() => calculateTotal(currentSheet), [currentSheet]);
 
   const handleChange = (key: keyof ScoreSheet, value: string) => {
     const parsed = Number(value);
@@ -72,17 +122,22 @@ export default function ScoringPage() {
   const resetCurrent = () => {
     setSheets((prev) => ({
       ...prev,
-      [activePlayer]: defaultSheet,
+      [activePlayer]: { ...defaultSheet },
     }));
   };
 
   const clearAll = () => {
-    setSheets({
-      1: defaultSheet,
-      2: defaultSheet,
-      3: defaultSheet,
-      4: defaultSheet,
-    });
+    // Clear both state and localStorage
+    const clearedSheets = {
+      1: { ...defaultSheet },
+      2: { ...defaultSheet },
+      3: { ...defaultSheet },
+      4: { ...defaultSheet },
+    };
+    setSheets(clearedSheets);
+    localStorage.removeItem(STORAGE_KEYS.SHEETS);
+    localStorage.removeItem(STORAGE_KEYS.PLAYER_COUNT);
+    localStorage.removeItem(STORAGE_KEYS.ACTIVE_PLAYER);
   };
 
   const handlePlayerCountChange = (count: number) => {
@@ -151,6 +206,15 @@ export default function ScoringPage() {
           />
           <ScoreCard title="Cards" fields={cards} sheet={currentSheet} onChange={handleChange} />
           <ScoreCard title="Tiles" fields={tiles} sheet={currentSheet} onChange={handleChange} />
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-1">
+          <ScoreCard
+            title="Tie-Breakers"
+            fields={tieBreakers}
+            sheet={currentSheet}
+            onChange={handleChange}
+          />
         </section>
 
         <div className="flex flex-wrap gap-3">
@@ -227,31 +291,48 @@ function LeaderboardSummary({ entries }: LeaderboardSummaryProps) {
   }
 
   const topScore = entries[0].total;
+  const topMoney = entries[0].remainingMoney;
+  
+  // Count how many players have the top score
   const scoreCounts = entries.reduce<Record<number, number>>((acc, entry) => {
     acc[entry.total] = (acc[entry.total] ?? 0) + 1;
     return acc;
   }, {});
   const topCount = scoreCounts[topScore] ?? 1;
 
+  // A player is a sole winner if they have the unique highest score
+  const soleWinnerIndex = entries.findIndex(
+    (e) => e.total === topScore && e.remainingMoney === topMoney && topCount === 1
+  );
+
   return (
     <div className="flex flex-wrap items-center gap-3 text-sm text-text/80">
       {entries.map((entry, index) => {
-        const isWinner = entry.total === topScore && topCount === 1;
-        const isTied = (scoreCounts[entry.total] ?? 0) > 1;
+        const isSoleWinner = index === soleWinnerIndex;
+        const isTiedByScore = (scoreCounts[entry.total] ?? 0) > 1;
+        
+        // Check if this player is tied by score but broken by money
+        const isTiedByScoreBrokenByMoney = isTiedByScore && entry.total === topScore && entry.remainingMoney === topMoney;
+        
         return (
           <div
             key={entry.player}
             className={`flex items-center gap-2 rounded-full border px-3 py-1 ${
-              isWinner
+              isSoleWinner || isTiedByScoreBrokenByMoney
                 ? 'border-primary bg-primary/20 text-primary'
                 : 'border-primary/20 bg-white/70 text-text/80'
             }`}
           >
-            {isWinner ? <Trophy className="h-4 w-4" /> : null}
+            {(isSoleWinner || isTiedByScoreBrokenByMoney) ? <Trophy className="h-4 w-4" /> : null}
             <span className="font-semibold">
               {index + 1}. P{entry.player} ({entry.total})
             </span>
-            {isTied ? <span className="text-xs uppercase text-text/60">Tied</span> : null}
+            {isTiedByScoreBrokenByMoney ? (
+              <span className="text-xs uppercase text-text/60">£{entry.remainingMoney}</span>
+            ) : null}
+            {isTiedByScore && !(entry.total === topScore && entry.remainingMoney === topMoney) ? (
+              <span className="text-xs uppercase text-text/60">Tied</span>
+            ) : null}
           </div>
         );
       })}

@@ -35,4 +35,5 @@ export interface ScoreSheet {
   birdCards: number;
   bonusTiles: number;
   harbourmasterTiles: number;
+  remainingMoney: number;
 }

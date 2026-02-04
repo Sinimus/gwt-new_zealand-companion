@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import BuildingCard from '../../../components/ui/BuildingCard';
 import { setupSteps } from '../steps';
 import {
@@ -16,15 +16,27 @@ type SetupWizardProps = {
   onSetupChange: (next: ActiveBuilding[]) => void;
 };
 
+// localStorage key for wizard step persistence
+const STORAGE_KEY_STEP = 'gwt-nz-wizard-step';
+
 export default function SetupWizard({
   playerCount,
   onPlayerCountChange,
   setup,
   onSetupChange,
 }: SetupWizardProps) {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEY_STEP);
+    return stored ? Number(stored) : 0;
+  });
+  
   const totalSteps = setupSteps.length;
   const step = setupSteps[currentStepIndex];
+
+  // Persist current step to localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_STEP, String(currentStepIndex));
+  }, [currentStepIndex]);
 
   const startingResources = useMemo(
     () => getStartingResources(playerCount),
