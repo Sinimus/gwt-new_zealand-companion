@@ -1,4 +1,4 @@
-import type { Building, BuildingSide, ActiveBuilding, PlayerCount } from '../../types';
+import type { ActiveBuilding, PlayerCount } from '../../types';
 export type { ActiveBuilding, PlayerCount };
 import { buildings } from '../../lib/data';
 
