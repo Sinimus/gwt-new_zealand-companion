@@ -50,3 +50,27 @@ export interface SeaBoardState {
   playerShips: Record<number, string>; // player number -> port ID
   claimedPorts: Record<string, number[]>; // port ID -> array of player numbers who placed discs
 }
+
+export type PlayerScore = {
+  player: number;
+  total: number;
+  remainingMoney: number;
+};
+
+export type PlayerCount = 2 | 3 | 4;
+
+export interface ActiveBuilding {
+  id: string;
+  name: string;
+  type: BuildingType;
+  activeSide: BuildingSide;
+}
+
+// Game History & Archive
+export interface ArchivedGame {
+  id: string;
+  date: string; // ISO string
+  playerCount: number;
+  leaderboard: PlayerScore[];
+  setup?: ActiveBuilding[];
+}

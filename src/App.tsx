@@ -1,10 +1,11 @@
 import { Link, Route, Routes } from 'react-router-dom';
-import { BookOpen, Map, Trophy, Wrench } from 'lucide-react';
+import { BookOpen, Map, Trophy, Wrench, History } from 'lucide-react';
 import AppLayout from './components/layout/AppLayout';
 import SetupPage from './modules/setup/SetupPage';
 import CodexPage from './modules/codex/CodexPage';
 import ToolsPage from './modules/tools/ToolsPage';
 import ScoringPage from './modules/scoring/ScoringPage';
+import HistoryPage from './modules/history/HistoryPage';
 
 const modules = [
   {
@@ -30,6 +31,12 @@ const modules = [
     description: 'Score computation and endgame summaries.',
     icon: Trophy,
     to: '/scoring',
+  },
+  {
+    title: 'History',
+    description: 'View archived games and track your progress over time.',
+    icon: History,
+    to: '/history',
   },
 ];
 
@@ -81,6 +88,7 @@ export default function App() {
         <Route path="/codex" element={<CodexPage />} />
         <Route path="/tools" element={<ToolsPage />} />
         <Route path="/scoring" element={<ScoringPage />} />
+        <Route path="/history" element={<HistoryPage />} />
       </Routes>
     </AppLayout>
   );

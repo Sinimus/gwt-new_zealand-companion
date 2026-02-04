@@ -1,7 +1,8 @@
-import { Trophy } from 'lucide-react';
+import { Trophy, Archive } from 'lucide-react';
 import { useMemo, useState, useEffect } from 'react';
 import { buildLeaderboard, type PlayerScore } from './logic';
 import type { ScoreSheet } from '../../types';
+import { archiveGame } from '../history/logic';
 
 const defaultSheet: ScoreSheet = {
   coins: 0,
@@ -54,7 +55,6 @@ const STORAGE_KEYS = {
 };
 
 export default function ScoringPage() {
-  // Initialize from localStorage or defaults
   const [playerCount, setPlayerCount] = useState(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.PLAYER_COUNT);
     return stored ? Number(stored) : 4;
@@ -64,21 +64,21 @@ export default function ScoringPage() {
     const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_PLAYER);
     return stored ? Number(stored) : 1;
   });
+
+  const [archiveSuccess, setArchiveSuccess] = useState(false);
   
   const [sheets, setSheets] = useState<Record<number, ScoreSheet>>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.SHEETS);
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // Validate structure - ensure all player slots exist
         const validated: Record<number, ScoreSheet> = {};
         for (let i = 1; i <= 4; i++) {
-          // Merge with defaultSheet to handle migration from old format
           validated[i] = { ...defaultSheet, ...parsed[i] };
         }
         return validated;
       } catch {
-        // If parsing fails, return defaults
+        // Fallback to default
       }
     }
     return {
@@ -89,7 +89,6 @@ export default function ScoringPage() {
     };
   });
 
-  // Persist state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.SHEETS, JSON.stringify(sheets));
   }, [sheets]);
@@ -101,6 +100,13 @@ export default function ScoringPage() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.ACTIVE_PLAYER, String(activePlayer));
   }, [activePlayer]);
+
+  useEffect(() => {
+    if (archiveSuccess) {
+      const timer = setTimeout(() => setArchiveSuccess(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [archiveSuccess]);
 
   const currentSheet = sheets[activePlayer];
   const leaderboard = useMemo(
@@ -127,7 +133,6 @@ export default function ScoringPage() {
   };
 
   const clearAll = () => {
-    // Clear both state and localStorage
     const clearedSheets = {
       1: { ...defaultSheet },
       2: { ...defaultSheet },
@@ -138,6 +143,15 @@ export default function ScoringPage() {
     localStorage.removeItem(STORAGE_KEYS.SHEETS);
     localStorage.removeItem(STORAGE_KEYS.PLAYER_COUNT);
     localStorage.removeItem(STORAGE_KEYS.ACTIVE_PLAYER);
+  };
+
+  const handleArchive = () => {
+    archiveGame({
+      playerCount,
+      leaderboard,
+    });
+    setArchiveSuccess(true);
+    clearAll();
   };
 
   const handlePlayerCountChange = (count: number) => {
@@ -157,6 +171,12 @@ export default function ScoringPage() {
             Enter each category score to calculate your final total instantly.
           </p>
         </header>
+
+        {archiveSuccess && (
+          <div className="rounded-xl border border-secondary bg-secondary/10 p-4 text-center text-sm font-semibold text-secondary animate-pulse">
+            ✓ Game archived! Check History to view past games.
+          </div>
+        )}
 
         <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-white/80 p-4">
           <div className="flex flex-wrap gap-2">
@@ -232,6 +252,14 @@ export default function ScoringPage() {
           >
             Clear All
           </button>
+          <button
+            type="button"
+            onClick={handleArchive}
+            className="rounded-full border border-secondary bg-secondary/10 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-secondary transition hover:border-secondary hover:bg-secondary/20 flex items-center gap-2"
+          >
+            <Archive className="h-4 w-4" />
+            Archive Session
+          </button>
         </div>
       </div>
 
@@ -293,14 +321,12 @@ function LeaderboardSummary({ entries }: LeaderboardSummaryProps) {
   const topScore = entries[0].total;
   const topMoney = entries[0].remainingMoney;
   
-  // Count how many players have the top score
   const scoreCounts = entries.reduce<Record<number, number>>((acc, entry) => {
     acc[entry.total] = (acc[entry.total] ?? 0) + 1;
     return acc;
   }, {});
   const topCount = scoreCounts[topScore] ?? 1;
 
-  // A player is a sole winner if they have the unique highest score
   const soleWinnerIndex = entries.findIndex(
     (e) => e.total === topScore && e.remainingMoney === topMoney && topCount === 1
   );
@@ -310,8 +336,6 @@ function LeaderboardSummary({ entries }: LeaderboardSummaryProps) {
       {entries.map((entry, index) => {
         const isSoleWinner = index === soleWinnerIndex;
         const isTiedByScore = (scoreCounts[entry.total] ?? 0) > 1;
-        
-        // Check if this player is tied by score but broken by money
         const isTiedByScoreBrokenByMoney = isTiedByScore && entry.total === topScore && entry.remainingMoney === topMoney;
         
         return (

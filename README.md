@@ -50,12 +50,18 @@ docker run -p 8080:80 gwt-nz-companion
 - **Data Persistence**: Ship locations and claimed ports are saved to localStorage.
 - **Responsive UI**: Optimized for mobile and desktop play.
 
+### 2026-02-04: Game History & Archive Implementation
+- **Type System**: Added `ArchivedGame` interface to `src/types/index.ts`.
+- **New Module**: Created `src/modules/history/` with logic for archiving and a dedicated History page.
+- **Scoring Integration**: Added "Archive Session" button to `src/modules/scoring/ScoringPage.tsx` with success feedback.
+- **Navigation**: Added History module to dashboard with History icon from lucide-react.
+
 ## Roadmap
 
 ### Near-Term Enhancements
 - **Advanced Tie-Breakers**: Implement official game tie-breaking rules (e.g., most money, most buildings) for more accurate leaderboard resolution.
 - **Interactive Sea Routes Board**: Visual board component allowing players to track delivery routes and claimed locations. (MVP COMPLETED)
-- **Game History/Archive**: Store completed game sessions with timestamps for historical reference.
+- **Game History/Archive**: Store completed game sessions with timestamps for historical reference. (COMPLETED)
 
 ### Future Considerations
 - **Cloud Sync**: Optional account system for syncing across devices.
