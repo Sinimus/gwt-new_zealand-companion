@@ -121,6 +121,63 @@ pnpm build
 
 ---
 
+## 🏛️ Architecture Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Rendering | Static SPA (Vite + React) | No backend required — all game logic runs in the browser |
+| Persistence | `localStorage` | KISS — avoids external DB/auth for a single-device companion tool |
+| State management | Native `useState` + `useEffect` | No complex async flows; TanStack Query would be overkill |
+| Module structure | Domain-driven folders | Each game concern is isolated and independently testable |
+| Offline support | Vite PWA Plugin (Workbox) | Enables home-screen install and full offline play |
+| Styling | Tailwind CSS v3 + custom "Pastoral" theme | Consistent thematic tokens without runtime CSS-in-JS overhead |
+
+---
+
+## 🛠️ Dev Log
+
+### v1.0.0 (2026-02)
+
+**Persistence & ESLint fix**
+- Fixed `react-refresh` plugin configuration error in `.eslintrc.cjs` (top-level `name` property conflict).
+- Implemented `localStorage` persistence for Scoring (`sheets`, `playerCount`, `activePlayer`), Setup (buildings, `currentStepIndex`), and Sea Routes board state.
+
+**Sea Routes Board (MVP)**
+- Added `Port` and `SeaBoardState` types.
+- Interactive schematic board tracking ship positions (per player) and claimed port discs.
+- State key: `gwt-nz-sea-state`.
+
+**Advanced Tie-Breakers**
+- Extended `ScoreSheet` with `remainingMoney: number`.
+- `buildLeaderboard` now sorts by total VP (DESC), then remaining money (DESC).
+- UI distinguishes tie-broken rankings visually in the leaderboard.
+
+**Game History & Archive**
+- New `history` module: `archiveGame`, `getArchivedGames`, `deleteArchivedGame`.
+- "Archive Session" button in Scoring saves completed games to `gwt-nz-archive`.
+- History page lists games in reverse-chronological order with winner highlighting.
+- Cross-tab sync via `window.focus` event listener.
+
+---
+
+## 🗺️ Roadmap
+
+### Near-term
+- [ ] **History export/import** — JSON download of all archived games for backup or sharing
+- [ ] **Score breakdown in history** — expandable card showing full per-category breakdown
+- [ ] **Statistics dashboard** — win rates, average VP, per-player performance over sessions
+
+### Mid-term
+- [ ] **NZ map for Sea Routes** — SVG-based geographical map replacing the schematic list
+- [ ] **Setup presets** — save and recall custom building layouts for repeated setups
+- [ ] **Share game result** — generate a shareable summary (URL or image)
+
+### Long-term / Stretch
+- [ ] **Cloud sync** — optional cross-device persistence (Supabase or similar)
+- [ ] **GWT: Base game support** — extend companion to cover the original GWT
+
+---
+
 ## ⚖️ Legal
 - **Disclaimer**: This is a fan-made project. It is not affiliated with, endorsed, or sponsored by Eggertspiele, Plan B Games, or Alexander Pfister. All game art and mechanics are property of their respective owners.
 - **License**: [GPL-3.0](LICENSE).

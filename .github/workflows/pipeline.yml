@@ -80,3 +80,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Trigger Coolify redeploy
+        run: |
+          curl --silent --fail --request GET \
+            "https://coolify.sinimus.com/api/v1/deploy?uuid=${{ secrets.COOLIFY_APP_UUID }}&force=false" \
+            --header "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
