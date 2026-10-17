@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router';
 import { BookOpen, Map, Trophy, Wrench, History } from 'lucide-react';
 import AppLayout from './components/layout/AppLayout';
 import SetupPage from './modules/setup/SetupPage';
