@@ -1,4 +1,5 @@
 import { Github } from 'lucide-react';
+import { version } from '../../../package.json';
 
 export default function Footer() {
   return (
@@ -9,7 +10,7 @@ export default function Footer() {
           <p>Fan-made companion app. Not affiliated with Eggertspiele or Alexander Pfister.</p>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.25em]">
-          <span>v1.0.0</span>
+          <span>v{version}</span>
           <span>GPL-3.0</span>
           <a
             href="https://github.com/Sinimus/gwt-new_zealand-companion"
