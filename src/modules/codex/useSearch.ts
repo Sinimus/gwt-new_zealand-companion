@@ -1,87 +1,62 @@
 import { useCallback } from 'react';
 import Fuse from 'fuse.js';
-import rulesData from '../../data/codex_rules.json';
-import iconsData from '../../data/codex_icons.json';
+import { CODEX_TOPICS } from '../../data/rules/codex';
+import { NEUTRAL_BUILDINGS, PRIVATE_BUILDINGS } from '../../data/rules/buildings';
+import type { RuleSource } from '../../data/rules/types';
 
-type RuleEntry = {
-  id: string;
+export interface SearchEntry {
+  key: string;
+  topicId: string;
   title: string;
   category: string;
-  content: string;
-  tags: string[];
-};
+  tags: readonly string[];
+  text: string;
+  source: RuleSource;
+}
 
-type IconEntry = {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-};
+const entries: SearchEntry[] = [
+  ...CODEX_TOPICS.flatMap((topic) =>
+    topic.items.map((item) => ({
+      key: `${topic.id}:${item.id}`,
+      topicId: topic.id,
+      title: topic.title,
+      category: topic.category,
+      tags: topic.tags,
+      text: item.text,
+      source: item.source,
+    })),
+  ),
+  ...NEUTRAL_BUILDINGS.map((building) => ({
+    key: `neutral-${building.letter}`,
+    topicId: `neutral-${building.letter}`,
+    title: `Neutral building ${building.letter}`,
+    category: 'Buildings',
+    tags: ['building', 'neutral', building.letter.toLowerCase()],
+    text: [...building.front, ...(building.back ?? [])].join(' '),
+    source: building.source,
+  })),
+  ...PRIVATE_BUILDINGS.map((building) => ({
+    key: `private-${building.id}`,
+    topicId: `private-${building.id}`,
+    title: `Private building ${building.id}`,
+    category: 'Buildings',
+    tags: ['building', 'private', building.id],
+    text: building.actions.join(' '),
+    source: building.source,
+  })),
+];
 
-export type SearchResult =
-  | {
-      kind: 'rule';
-      id: string;
-      title: string;
-      category: string;
-      content: string;
-      tags: string[];
-      score?: number;
-    }
-  | {
-      kind: 'icon';
-      id: string;
-      name: string;
-      description: string;
-      type: string;
-      score?: number;
-    };
-
-const rules = rulesData as RuleEntry[];
-const icons = iconsData as IconEntry[];
-
-const ruleFuse = new Fuse(rules, {
-  keys: ['title', 'content', 'tags', 'category'],
+const fuse = new Fuse(entries, {
+  keys: [{ name: 'title', weight: 2 }, 'tags', 'text'],
   threshold: 0.3,
-  includeScore: true,
 });
 
-const iconFuse = new Fuse(icons, {
-  keys: ['name', 'description', 'type'],
-  threshold: 0.3,
-  includeScore: true,
-});
-
-export function useSearch() {
-  return useCallback((query: string): SearchResult[] => {
+export function useSearch(): (query: string) => SearchEntry[] {
+  return useCallback((query: string) => {
     const trimmed = query.trim();
     if (!trimmed) {
       return [];
     }
-
-    const ruleResults = ruleFuse.search(trimmed).map((result) => ({
-      kind: 'rule' as const,
-      id: result.item.id,
-      title: result.item.title,
-      category: result.item.category,
-      content: result.item.content,
-      tags: result.item.tags,
-      score: result.score,
-    }));
-
-    const iconResults = iconFuse.search(trimmed).map((result) => ({
-      kind: 'icon' as const,
-      id: result.item.id,
-      name: result.item.name,
-      description: result.item.description,
-      type: result.item.type,
-      score: result.score,
-    }));
-
-    return [...ruleResults, ...iconResults].sort((a, b) => {
-      const aScore = a.score ?? 1;
-      const bScore = b.score ?? 1;
-      return aScore - bScore;
-    });
+    return fuse.search(trimmed).map((result) => result.item);
   }, []);
 }
