@@ -144,7 +144,7 @@ export default function SetupWizard({
         </div>
       ) : null}
 
-      <div className="sticky bottom-0 z-10 rounded-2xl border border-primary/20 bg-canvas/95 px-5 py-4 shadow-sm">
+      <div className="sticky bottom-0 z-10 rounded-2xl border border-primary/20 bg-canvas/95 px-5 py-4 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"

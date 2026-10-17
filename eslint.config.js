@@ -8,7 +8,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
   // tsc -b emits declarations for the config files (see .gitignore)
-  globalIgnores(['dist', 'dev-dist', 'vite.config.d.ts', 'tailwind.config.d.ts']),
+  globalIgnores(['dist', 'dev-dist', 'vite.config.d.ts']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

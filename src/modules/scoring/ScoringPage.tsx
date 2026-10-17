@@ -263,7 +263,7 @@ export default function ScoringPage() {
         </div>
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-primary/20 bg-canvas/95 px-6 py-4 backdrop-blur">
+      <footer className="fixed bottom-0 left-0 right-0 border-t border-primary/20 bg-canvas/95 px-6 py-4 backdrop-blur-sm">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-text/60">Leaderboard</p>
@@ -290,7 +290,7 @@ function ScoreCard({ title, fields, sheet, onChange }: ScoreCardProps) {
       <div className="mt-4 space-y-3">
         {fields.map((field) => (
           <label key={field.key} className="block space-y-2">
-            <span className="text-sm font-medium text-text">{field.label}</span>
+            <span className="block text-sm leading-6 font-medium text-text">{field.label}</span>
             {field.helper ? (
               <span className="block text-xs text-text/60">{field.helper}</span>
             ) : null}
@@ -300,7 +300,7 @@ function ScoreCard({ title, fields, sheet, onChange }: ScoreCardProps) {
               min={0}
               value={Number.isNaN(sheet[field.key]) ? 0 : sheet[field.key]}
               onChange={(event) => onChange(field.key, event.target.value)}
-              className="w-full rounded-xl border border-primary/30 bg-white px-4 py-3 text-lg font-semibold text-text outline-none transition focus:border-primary"
+              className="w-full rounded-xl border border-primary/30 bg-white px-4 py-3 text-lg font-semibold text-text outline-hidden transition focus:border-primary"
             />
           </label>
         ))}

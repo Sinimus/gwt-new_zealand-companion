@@ -82,7 +82,7 @@ export default function CodexPage() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search for delivery, exchange token, gold..."
-            className="w-full rounded-2xl border border-primary/30 bg-white px-5 py-4 text-lg font-semibold text-text outline-none transition focus:border-primary"
+            className="w-full rounded-2xl border border-primary/30 bg-white px-5 py-4 text-lg font-semibold text-text outline-hidden transition focus:border-primary"
           />
         </div>
 

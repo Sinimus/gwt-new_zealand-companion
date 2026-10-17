@@ -4,4 +4,5 @@ module.exports = {
   trailingComma: 'all',
   printWidth: 100,
   plugins: ['prettier-plugin-tailwindcss'],
+  tailwindStylesheet: './src/index.css',
 };
