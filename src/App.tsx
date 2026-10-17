@@ -1,46 +1,42 @@
-import { Link, Route, Routes } from 'react-router';
-import { BookOpen, Map, Trophy, Wrench, History } from 'lucide-react';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router';
+import { BookOpen, Map, Trophy, Wrench } from 'lucide-react';
 import AppLayout from './components/layout/AppLayout';
 import SetupPage from './modules/setup/SetupPage';
 import CodexPage from './modules/codex/CodexPage';
 import ToolsPage from './modules/tools/ToolsPage';
 import ScoringPage from './modules/scoring/ScoringPage';
-import HistoryPage from './modules/history/HistoryPage';
 
 const modules = [
   {
     title: 'Setup',
-    description: 'Prepare the table and initialize the New Zealand flow.',
+    description: 'Setup for 1 to 4 players, solo against Sarah included.',
     icon: Map,
     to: '/setup',
   },
   {
     title: 'Codex',
-    description: 'Rules references, expansions, and tactical notes.',
+    description: 'Rules, buildings and terms with rulebook pages.',
     icon: BookOpen,
     to: '/codex',
   },
   {
     title: 'Tools',
-    description: 'Timers, trackers, and utility widgets for play.',
+    description:
+      'Turn, Wellington, market token, income, shearing, buying sheep and the sea routes.',
     icon: Wrench,
     to: '/tools',
   },
   {
     title: 'Scoring',
-    description: 'Score computation and endgame summaries.',
+    description: 'The 12 categories of the scoring pad.',
     icon: Trophy,
     to: '/scoring',
-  },
-  {
-    title: 'History',
-    description: 'View archived games and track your progress over time.',
-    icon: History,
-    to: '/history',
   },
 ];
 
 function Dashboard() {
+  const location = useLocation();
+
   return (
     <main className="bg-canvas text-text">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-16">
@@ -50,7 +46,7 @@ function Dashboard() {
             Great Western Trail: New Zealand
           </h1>
           <p className="max-w-2xl text-base text-text/70 sm:text-lg">
-            A focused command center for setup, rules, utilities, and scoring.
+            A reference for the table: you play the game, the app stores nothing.
           </p>
         </header>
         <section className="grid gap-4 sm:grid-cols-2">
@@ -59,12 +55,15 @@ function Dashboard() {
             return (
               <Link
                 key={module.title}
-                to={module.to}
+                to={{ pathname: module.to, search: location.search }}
                 className="group rounded-2xl border border-primary/20 bg-white/70 p-6 shadow-xs transition hover:-translate-y-1 hover:border-primary/50 hover:bg-white"
               >
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-text">{module.title}</h2>
-                  <Icon className="h-6 w-6 text-primary transition group-hover:text-secondary" />
+                  <Icon
+                    aria-hidden="true"
+                    className="h-6 w-6 text-primary transition group-hover:text-secondary"
+                  />
                 </div>
                 <p className="mt-3 text-sm text-text/70">{module.description}</p>
                 <span className="mt-6 inline-flex text-xs uppercase tracking-[0.2em] text-text/60">
@@ -88,7 +87,7 @@ export default function App() {
         <Route path="/codex" element={<CodexPage />} />
         <Route path="/tools" element={<ToolsPage />} />
         <Route path="/scoring" element={<ScoringPage />} />
-        <Route path="/history" element={<HistoryPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppLayout>
   );
