@@ -7,7 +7,7 @@ type BuildingCardProps = {
 
 export default function BuildingCard({ name, activeSide }: BuildingCardProps) {
   return (
-    <article className="flex h-full flex-col gap-4 rounded-2xl border border-primary/20 bg-white/75 p-5 text-text shadow-sm">
+    <article className="flex h-full flex-col gap-4 rounded-2xl border border-primary/20 bg-white/75 p-5 text-text shadow-xs">
       <div className="space-y-1">
         <p className="text-xs uppercase tracking-[0.35em] text-text/60">Neutral Building</p>
         <h3 className="text-lg font-semibold leading-tight text-text">{name}</h3>

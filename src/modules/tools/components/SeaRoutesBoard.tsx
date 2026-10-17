@@ -128,7 +128,7 @@ export default function SeaRoutesBoard() {
                 <select
                   value={currentPortId}
                   onChange={(e) => setPlayerShip(player, e.target.value)}
-                  className="flex-1 rounded-xl border border-primary/30 bg-white px-4 py-2 text-sm text-text outline-none transition focus:border-primary"
+                  className="flex-1 rounded-xl border border-primary/30 bg-white px-4 py-2 text-sm text-text outline-hidden transition focus:border-primary"
                 >
                   {PORTS.map((port) => (
                     <option key={port.id} value={port.id}>

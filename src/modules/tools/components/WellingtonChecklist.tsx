@@ -70,7 +70,7 @@ export default function WellingtonChecklist() {
               key={step.id}
               className={`flex cursor-pointer items-start gap-4 rounded-2xl border px-5 py-4 transition ${
                 step.highlight
-                  ? 'border-l-4 border-primary/60 bg-primary/10 shadow-sm'
+                  ? 'border-l-4 border-primary/60 bg-primary/10 shadow-xs'
                   : 'border-primary/20 bg-white/80'
               }`}
             >

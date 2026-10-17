@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router';
 import { BookOpen, Map, Trophy, Wrench, History } from 'lucide-react';
 import AppLayout from './components/layout/AppLayout';
 import SetupPage from './modules/setup/SetupPage';
@@ -60,7 +60,7 @@ function Dashboard() {
               <Link
                 key={module.title}
                 to={module.to}
-                className="group rounded-2xl border border-primary/20 bg-white/70 p-6 shadow-sm transition hover:-translate-y-1 hover:border-primary/50 hover:bg-white"
+                className="group rounded-2xl border border-primary/20 bg-white/70 p-6 shadow-xs transition hover:-translate-y-1 hover:border-primary/50 hover:bg-white"
               >
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-text">{module.title}</h2>

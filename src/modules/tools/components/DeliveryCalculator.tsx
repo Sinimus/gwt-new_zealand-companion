@@ -81,7 +81,7 @@ export default function DeliveryCalculator() {
               min={0}
               value={certificates}
               onChange={(event) => setCertificates(Number(event.target.value) || 0)}
-              className="mt-4 w-full rounded-xl border border-primary/30 bg-white px-4 py-3 text-lg font-semibold text-text outline-none transition focus:border-secondary"
+              className="mt-4 w-full rounded-xl border border-primary/30 bg-white px-4 py-3 text-lg font-semibold text-text outline-hidden transition focus:border-secondary"
             />
           </div>
           <div className="rounded-2xl border border-secondary/30 bg-secondary/10 p-5 text-center">
