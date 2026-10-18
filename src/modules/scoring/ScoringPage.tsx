@@ -1,365 +1,141 @@
-import { Trophy, Archive } from 'lucide-react';
-import { useMemo, useState, useEffect } from 'react';
-import { buildLeaderboard, type PlayerScore } from './logic';
-import type { ScoreSheet } from '../../types';
-import { archiveGame } from '../history/logic';
+import { useState } from 'react';
+import PlayerCountPicker from '../../components/rules/PlayerCountPicker';
+import { usePlayerCount } from '../../components/rules/usePlayerCount';
+import {
+  SCORE_CATEGORIES,
+  type ScoreCategoryId,
+} from '../../data/rules/scoring';
+import { emptySheet, ranking, SARAH_EXCLUDED, type ScoreSheet } from '../../logic/scoring';
+import CategoryCard from './components/CategoryCard';
+import ResultsCard from './components/ResultsCard';
 
-const defaultSheet: ScoreSheet = {
-  coins: 0,
-  buildings: 0,
-  citiesPorts: 0,
-  unlockedDiscs: 0,
-  hazards: 0,
-  sheepCards: 0,
-  objectiveCards: 0,
-  birdCards: 0,
-  bonusTiles: 0,
-  harbourmasterTiles: 0,
-  remainingMoney: 0,
-};
+interface PlayerEntry {
+  player: number;
+  name: string;
+}
 
-type FieldConfig = {
-  key: keyof ScoreSheet;
-  label: string;
-  helper?: string;
-};
+const initialSheets = (): Record<number, ScoreSheet> => ({
+  1: emptySheet(),
+  2: emptySheet(),
+  3: emptySheet(),
+  4: emptySheet(),
+});
 
-const boardAssets: FieldConfig[] = [
-  { key: 'coins', label: 'Coins', helper: '5 coins = 1 VP' },
-  { key: 'buildings', label: 'Buildings VP' },
-  { key: 'citiesPorts', label: 'Cities & Ports VP' },
-  { key: 'unlockedDiscs', label: 'Unlocked Discs VP' },
-  { key: 'hazards', label: 'Hazards VP' },
-];
-
-const cards: FieldConfig[] = [
-  { key: 'sheepCards', label: 'Sheep Cards VP' },
-  { key: 'objectiveCards', label: 'Objective Cards VP' },
-  { key: 'birdCards', label: 'Bird Cards VP' },
-];
-
-const tiles: FieldConfig[] = [
-  { key: 'bonusTiles', label: 'Bonus Tiles VP' },
-  { key: 'harbourmasterTiles', label: 'Harbourmaster Tiles VP' },
-];
-
-const tieBreakers: FieldConfig[] = [
-  { key: 'remainingMoney', label: 'Remaining Money', helper: 'Tie-breaker: £' },
-];
-
-// localStorage keys - use namespaced keys to avoid conflicts
-const STORAGE_KEYS = {
-  SHEETS: 'gwt-nz-scoring-sheets',
-  PLAYER_COUNT: 'gwt-nz-scoring-playerCount',
-  ACTIVE_PLAYER: 'gwt-nz-scoring-activePlayer',
-};
+const playersFor = (count: number): readonly PlayerEntry[] =>
+  count === 1
+    ? [
+        { player: 1, name: 'You' },
+        { player: 2, name: 'Sarah' },
+      ]
+    : Array.from({ length: count }, (_, index) => ({
+        player: index + 1,
+        name: `Player ${index + 1}`,
+      }));
 
 export default function ScoringPage() {
-  const [playerCount, setPlayerCount] = useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEYS.PLAYER_COUNT);
-    return stored ? Number(stored) : 4;
-  });
-  
-  const [activePlayer, setActivePlayer] = useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_PLAYER);
-    return stored ? Number(stored) : 1;
-  });
+  const [count, setCount] = usePlayerCount();
+  const [selectedPlayer, setSelectedPlayer] = useState(1);
+  const [sheets, setSheets] = useState<Record<number, ScoreSheet>>(initialSheets);
 
-  const [archiveSuccess, setArchiveSuccess] = useState(false);
-  
-  const [sheets, setSheets] = useState<Record<number, ScoreSheet>>(() => {
-    const stored = localStorage.getItem(STORAGE_KEYS.SHEETS);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        const validated: Record<number, ScoreSheet> = {};
-        for (let i = 1; i <= 4; i++) {
-          validated[i] = { ...defaultSheet, ...parsed[i] };
-        }
-        return validated;
-      } catch {
-        // Fallback to default
-      }
-    }
-    return {
-      1: { ...defaultSheet },
-      2: { ...defaultSheet },
-      3: { ...defaultSheet },
-      4: { ...defaultSheet },
-    };
-  });
+  const players = playersFor(count);
+  const active = players.some((entry) => entry.player === selectedPlayer) ? selectedPlayer : 1;
+  const activeSheet = sheets[active];
+  const sarahActive = count === 1 && active === 2;
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.SHEETS, JSON.stringify(sheets));
-  }, [sheets]);
+  const setValue = (category: ScoreCategoryId, value: number) => {
+    setSheets((previous) => {
+      const updated: ScoreSheet = { ...previous[active] };
+      updated[category] = value;
+      return { ...previous, [active]: updated };
+    });
+  };
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.PLAYER_COUNT, String(playerCount));
-  }, [playerCount]);
+  const resetPlayer = () => {
+    setSheets((previous) => ({ ...previous, [active]: emptySheet() }));
+  };
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.ACTIVE_PLAYER, String(activePlayer));
-  }, [activePlayer]);
+  const resetAll = () => {
+    setSheets(initialSheets());
+  };
 
-  useEffect(() => {
-    if (archiveSuccess) {
-      const timer = setTimeout(() => setArchiveSuccess(false), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [archiveSuccess]);
-
-  const currentSheet = sheets[activePlayer];
-  const leaderboard = useMemo(
-    () => buildLeaderboard(sheets, playerCount),
-    [sheets, playerCount],
+  const ranked = ranking(
+    players.map((entry) => ({
+      player: entry.player,
+      sheet: sheets[entry.player],
+      excluded: count === 1 && entry.player === 2 ? SARAH_EXCLUDED : undefined,
+    })),
   );
 
-  const handleChange = (key: keyof ScoreSheet, value: string) => {
-    const parsed = Number(value);
-    setSheets((prev) => ({
-      ...prev,
-      [activePlayer]: {
-        ...prev[activePlayer],
-        [key]: Number.isNaN(parsed) ? 0 : parsed,
-      },
-    }));
-  };
-
-  const resetCurrent = () => {
-    setSheets((prev) => ({
-      ...prev,
-      [activePlayer]: { ...defaultSheet },
-    }));
-  };
-
-  const clearAll = () => {
-    const clearedSheets = {
-      1: { ...defaultSheet },
-      2: { ...defaultSheet },
-      3: { ...defaultSheet },
-      4: { ...defaultSheet },
-    };
-    setSheets(clearedSheets);
-    localStorage.removeItem(STORAGE_KEYS.SHEETS);
-    localStorage.removeItem(STORAGE_KEYS.PLAYER_COUNT);
-    localStorage.removeItem(STORAGE_KEYS.ACTIVE_PLAYER);
-  };
-
-  const handleArchive = () => {
-    archiveGame({
-      playerCount,
-      leaderboard,
-    });
-    setArchiveSuccess(true);
-    clearAll();
-  };
-
-  const handlePlayerCountChange = (count: number) => {
-    setPlayerCount(count);
-    if (activePlayer > count) {
-      setActivePlayer(count);
-    }
-  };
+  const nameOf = (player: number): string =>
+    players.find((entry) => entry.player === player)?.name ?? `Player ${player}`;
 
   return (
     <main className="min-h-screen bg-canvas text-text">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 pb-48 pt-16">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-16">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.35em] text-text/60">Scoring Module</p>
-          <h1 className="text-3xl font-semibold sm:text-4xl">End-Game Scoring Calculator</h1>
+          <p className="text-xs uppercase tracking-[0.35em] text-text/60">Scoring</p>
+          <h1 className="text-3xl font-semibold sm:text-4xl">Scoring</h1>
           <p className="max-w-2xl text-sm text-text/70">
-            Enter each category score to calculate your final total instantly.
+            The 12 categories of the scoring pad. Nothing is stored: reloading starts from zero.
           </p>
+          <PlayerCountPicker value={count} onChange={setCount} />
         </header>
 
-        {archiveSuccess && (
-          <div className="rounded-xl border border-secondary bg-secondary/10 p-4 text-center text-sm font-semibold text-secondary animate-pulse">
-            ✓ Game archived! Check History to view past games.
-          </div>
-        )}
-
-        <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-white/80 p-4">
-          <div className="flex flex-wrap gap-2">
-            {[1, 2, 3, 4].map((player) => (
-              <button
-                key={player}
-                type="button"
-                onClick={() => setActivePlayer(player)}
-                disabled={player > playerCount}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
-                  player === activePlayer
-                    ? 'border-primary bg-primary/20 text-primary'
-                    : 'border-primary/30 bg-white/60 text-text/70 hover:border-primary'
-                } ${player > playerCount ? 'cursor-not-allowed opacity-40' : ''}`}
-              >
-                Player {player}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-text/60">
-            <span>Players</span>
-            <div className="flex gap-2">
-              {[2, 3, 4].map((count) => (
+        <section aria-label="Players" className="space-y-4">
+          <div
+            className={`grid gap-2 ${count === 1 ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-4'}`}
+          >
+            {players.map((entry) => {
+              const isActive = entry.player === active;
+              return (
                 <button
-                  key={count}
+                  key={entry.player}
                   type="button"
-                  onClick={() => handlePlayerCountChange(count)}
-                  className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition ${
-                    playerCount === count
+                  aria-pressed={isActive}
+                  onClick={() => setSelectedPlayer(entry.player)}
+                  className={`min-h-11 rounded-2xl border px-4 text-sm font-semibold transition ${
+                    isActive
                       ? 'border-primary bg-primary/20 text-primary'
-                      : 'border-primary/30 bg-white/60 text-text/70 hover:border-primary'
+                      : 'border-primary/30 bg-white/70 text-text/70 hover:border-primary'
                   }`}
                 >
-                  {count}
+                  {entry.name}
                 </button>
-              ))}
-            </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={resetPlayer}
+              className="min-h-11 rounded-full border border-primary/30 bg-white px-5 text-xs font-semibold uppercase tracking-[0.2em] text-text/70 transition hover:border-primary"
+            >
+              Reset this player
+            </button>
+            <button
+              type="button"
+              onClick={resetAll}
+              className="min-h-11 rounded-full border border-primary/30 bg-white px-5 text-xs font-semibold uppercase tracking-[0.2em] text-text/70 transition hover:border-primary"
+            >
+              Reset all
+            </button>
           </div>
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-3">
-          <ScoreCard
-            title="Board Assets"
-            fields={boardAssets}
-            sheet={currentSheet}
-            onChange={handleChange}
-          />
-          <ScoreCard title="Cards" fields={cards} sheet={currentSheet} onChange={handleChange} />
-          <ScoreCard title="Tiles" fields={tiles} sheet={currentSheet} onChange={handleChange} />
-        </section>
-
-        <section className="grid gap-4 lg:grid-cols-1">
-          <ScoreCard
-            title="Tie-Breakers"
-            fields={tieBreakers}
-            sheet={currentSheet}
-            onChange={handleChange}
-          />
-        </section>
-
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={resetCurrent}
-            className="rounded-full border border-primary/30 bg-white/80 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-text/80 transition hover:border-primary hover:bg-white"
-          >
-            Reset Player
-          </button>
-          <button
-            type="button"
-            onClick={clearAll}
-            className="rounded-full border border-primary/40 bg-primary/10 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary transition hover:border-primary hover:bg-primary/20"
-          >
-            Clear All
-          </button>
-          <button
-            type="button"
-            onClick={handleArchive}
-            className="rounded-full border border-secondary bg-secondary/10 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-secondary transition hover:border-secondary hover:bg-secondary/20 flex items-center gap-2"
-          >
-            <Archive className="h-4 w-4" />
-            Archive Session
-          </button>
-        </div>
-      </div>
-
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-primary/20 bg-canvas/95 px-6 py-4 backdrop-blur-sm">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-text/60">Leaderboard</p>
-            <LeaderboardSummary entries={leaderboard} />
-          </div>
-          <div className="text-right text-xs text-text/60">Coins are converted at 5:1.</div>
-        </div>
-      </footer>
-    </main>
-  );
-}
-
-type ScoreCardProps = {
-  title: string;
-  fields: FieldConfig[];
-  sheet: ScoreSheet;
-  onChange: (key: keyof ScoreSheet, value: string) => void;
-};
-
-function ScoreCard({ title, fields, sheet, onChange }: ScoreCardProps) {
-  return (
-    <section className="rounded-2xl border border-primary/20 bg-white/80 p-5">
-      <h2 className="text-lg font-semibold text-text">{title}</h2>
-      <div className="mt-4 space-y-3">
-        {fields.map((field) => (
-          <label key={field.key} className="block space-y-2">
-            <span className="block text-sm leading-6 font-medium text-text">{field.label}</span>
-            {field.helper ? (
-              <span className="block text-xs text-text/60">{field.helper}</span>
-            ) : null}
-            <input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={Number.isNaN(sheet[field.key]) ? 0 : sheet[field.key]}
-              onChange={(event) => onChange(field.key, event.target.value)}
-              className="w-full rounded-xl border border-primary/30 bg-white px-4 py-3 text-lg font-semibold text-text outline-hidden transition focus:border-primary"
+        <div className="grid gap-4 md:grid-cols-2">
+          {SCORE_CATEGORIES.map((category) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              value={activeSheet[category.id]}
+              disabled={sarahActive && SARAH_EXCLUDED.includes(category.id)}
+              onChange={(value) => setValue(category.id, value)}
             />
-          </label>
-        ))}
+          ))}
+        </div>
+
+        <ResultsCard ranked={ranked} nameOf={nameOf} />
       </div>
-    </section>
-  );
-}
-
-type LeaderboardSummaryProps = {
-  entries: PlayerScore[];
-};
-
-function LeaderboardSummary({ entries }: LeaderboardSummaryProps) {
-  if (entries.length === 0) {
-    return <p className="text-lg font-semibold text-primary">No scores yet</p>;
-  }
-
-  const topScore = entries[0].total;
-  const topMoney = entries[0].remainingMoney;
-  
-  const scoreCounts = entries.reduce<Record<number, number>>((acc, entry) => {
-    acc[entry.total] = (acc[entry.total] ?? 0) + 1;
-    return acc;
-  }, {});
-  const topCount = scoreCounts[topScore] ?? 1;
-
-  const soleWinnerIndex = entries.findIndex(
-    (e) => e.total === topScore && e.remainingMoney === topMoney && topCount === 1
-  );
-
-  return (
-    <div className="flex flex-wrap items-center gap-3 text-sm text-text/80">
-      {entries.map((entry, index) => {
-        const isSoleWinner = index === soleWinnerIndex;
-        const isTiedByScore = (scoreCounts[entry.total] ?? 0) > 1;
-        const isTiedByScoreBrokenByMoney = isTiedByScore && entry.total === topScore && entry.remainingMoney === topMoney;
-        
-        return (
-          <div
-            key={entry.player}
-            className={`flex items-center gap-2 rounded-full border px-3 py-1 ${
-              isSoleWinner || isTiedByScoreBrokenByMoney
-                ? 'border-primary bg-primary/20 text-primary'
-                : 'border-primary/20 bg-white/70 text-text/80'
-            }`}
-          >
-            {(isSoleWinner || isTiedByScoreBrokenByMoney) ? <Trophy className="h-4 w-4" /> : null}
-            <span className="font-semibold">
-              {index + 1}. P{entry.player} ({entry.total})
-            </span>
-            {isTiedByScoreBrokenByMoney ? (
-              <span className="text-xs uppercase text-text/60">£{entry.remainingMoney}</span>
-            ) : null}
-            {isTiedByScore && !(entry.total === topScore && entry.remainingMoney === topMoney) ? (
-              <span className="text-xs uppercase text-text/60">Tied</span>
-            ) : null}
-          </div>
-        );
-      })}
-    </div>
+    </main>
   );
 }
