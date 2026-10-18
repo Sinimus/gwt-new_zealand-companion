@@ -9,7 +9,7 @@ export default function RuleList({ items }: RuleListProps) {
   return (
     <ul className="list-disc space-y-2 pl-5">
       {items.map((item) => (
-        <li key={item.id} className="text-sm leading-relaxed text-text/80">
+        <li key={item.id} className="whitespace-pre-line text-sm leading-relaxed text-text/80">
           {item.text}
           <span className="ml-2 whitespace-nowrap text-xs text-text/50">
             {formatSource(item.source)}

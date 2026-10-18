@@ -7,21 +7,21 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'GWT:NZ Companion',
+        name: 'GWT New Zealand Companion',
         short_name: 'GWT:NZ',
-        theme_color: '#f59e0b',
+        description:
+          'Unofficial companion for Great Western Trail: New Zealand: setup for 1 to 4 players and solo, rules with rulebook pages, table helpers and the scoring pad.',
+        theme_color: '#d97706',
+        background_color: '#fdf6e3',
+        display: 'standalone',
+        lang: 'en',
         icons: [
-          {
-            src: '/icon.svg',
-            sizes: '192x192',
-            type: 'image/svg+xml',
-          },
-          {
-            src: '/icon.svg',
-            sizes: '512x512',
-            type: 'image/svg+xml',
-          },
+          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml' },
         ],
       },
     }),

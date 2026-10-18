@@ -16,7 +16,7 @@ export default function Footer() {
             href="https://github.com/Sinimus/gwt-new_zealand-companion"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 text-text/70 transition hover:text-primary"
+            className="inline-flex min-h-11 items-center gap-2 text-text/70 transition hover:text-primary"
           >
             <Github className="h-4 w-4" />
             GitHub

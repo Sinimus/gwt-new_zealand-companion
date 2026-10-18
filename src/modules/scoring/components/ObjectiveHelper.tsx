@@ -42,7 +42,7 @@ export default function ObjectiveHelper({ disabled, onUse }: ObjectiveHelperProp
 
   return (
     <details className="mt-4 rounded-2xl border border-primary/20 bg-white/80 p-4">
-      <summary className="cursor-pointer text-sm font-semibold text-text">
+      <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-text">
         Objective cards helper
       </summary>
       <div className="mt-3 space-y-2">

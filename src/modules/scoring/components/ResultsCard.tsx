@@ -42,7 +42,7 @@ export default function ResultsCard({ ranked, nameOf }: ResultsCardProps) {
         <RuleList items={SCORING_RULES} />
       </div>
       <details className="mt-4">
-        <summary className="cursor-pointer text-sm font-semibold text-text">
+        <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-text">
           Harbourmaster tasks
         </summary>
         <div className="mt-3">

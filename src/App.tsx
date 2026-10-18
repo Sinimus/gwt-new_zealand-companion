@@ -1,10 +1,12 @@
+import { lazy, Suspense } from 'react';
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router';
 import { BookOpen, Map, Trophy, Wrench } from 'lucide-react';
 import AppLayout from './components/layout/AppLayout';
-import SetupPage from './modules/setup/SetupPage';
-import CodexPage from './modules/codex/CodexPage';
-import ToolsPage from './modules/tools/ToolsPage';
-import ScoringPage from './modules/scoring/ScoringPage';
+
+const SetupPage = lazy(() => import('./modules/setup/SetupPage'));
+const CodexPage = lazy(() => import('./modules/codex/CodexPage'));
+const ToolsPage = lazy(() => import('./modules/tools/ToolsPage'));
+const ScoringPage = lazy(() => import('./modules/scoring/ScoringPage'));
 
 const modules = [
   {
@@ -81,14 +83,22 @@ function Dashboard() {
 export default function App() {
   return (
     <AppLayout>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/setup" element={<SetupPage />} />
-        <Route path="/codex" element={<CodexPage />} />
-        <Route path="/tools" element={<ToolsPage />} />
-        <Route path="/scoring" element={<ScoringPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Suspense
+        fallback={
+          <p className="px-6 py-16 text-center text-sm text-text/60" role="status">
+            Loading…
+          </p>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/setup" element={<SetupPage />} />
+          <Route path="/codex" element={<CodexPage />} />
+          <Route path="/tools" element={<ToolsPage />} />
+          <Route path="/scoring" element={<ScoringPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </AppLayout>
   );
 }
