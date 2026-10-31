@@ -31,7 +31,10 @@ pnpm dev      # development server
 pnpm test     # vitest
 pnpm lint     # eslint, no warnings allowed
 pnpm build    # tsc -b and vite build
+pnpm test:e2e # Playwright against a running image on localhost:8080 (E2E_BASE_URL overrides)
 ```
+
+`pnpm exec playwright install chromium` once before the first browser test. CI (`.github/workflows/pipeline.yml`) runs lint, type check and unit tests, then builds the production image, smoke-tests it and runs the browser test against it: every page in `e2e/routes.json` must render its heading from the bundle without a JavaScript or console error. A push to `main` publishes and deploys only after both jobs pass.
 
 ## Structure
 

@@ -39,11 +39,11 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-  # Builds the production image without pushing it, so a broken Dockerfile or
-  # nginx.conf fails on the pull request instead of in the deploy after the merge
+  # Builds the production image without pushing it and tests it in a browser,
+  # on pull requests and before every publish, so a broken Dockerfile, nginx.conf
+  # or bundle fails here instead of in the deploy
   docker-build:
     needs: test
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,7 +71,6 @@ jobs:
             sleep 2
           done
           set -e
-          trap 'docker logs smoke; docker rm --force smoke' EXIT
           curl --silent --fail --output page.html http://localhost:8080/
           grep --quiet '<title>GWT New Zealand Companion</title>' page.html
           curl --silent --fail --head http://localhost:8080/ | grep --quiet --ignore-case '^cache-control: no-cache'
@@ -83,8 +82,44 @@ jobs:
           docker exec smoke wget -q --spider http://127.0.0.1/
           echo "Smoke test passed"
 
+      # Browser test against the same running container: every page in
+      # e2e/routes.json must render from the bundle without a JavaScript error
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Browser test the image
+        run: pnpm test:e2e
+        env:
+          E2E_BASE_URL: http://localhost:8080
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
+
+      - name: Container logs and cleanup
+        if: always()
+        run: |
+          docker logs smoke || true
+          docker rm --force smoke || true
+
   publish:
-    needs: test
+    needs: [test, docker-build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
