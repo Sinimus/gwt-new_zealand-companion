@@ -9,3 +9,7 @@ vite.config.js
 tailwind.config.js
 tailwind.config.d.ts
 vite.config.d.ts
+
+# Playwright
+/test-results/
+/playwright-report/

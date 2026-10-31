@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -20,10 +21,19 @@ export default defineConfig({
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          {
+            src: '/icon-maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
           { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml' },
         ],
       },
     }),
   ],
+  test: {
+    // e2e/ holds the Playwright browser test, which runs against the built image
+    include: ['src/**/*.test.{ts,tsx}'],
+  },
 });
